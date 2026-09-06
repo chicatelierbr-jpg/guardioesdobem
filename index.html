@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<title>Guardiões do Bem</title>
+<style>
+  :root{
+    --bg: #EAF6F2;
+    --bg2: #FFF7E8;
+    --ink: #2E2A26;
+    --card: #FFFFFF;
+    --line: #D9CFC0;
+    --amarelo: #F5C542;
+    --vermelho: #E15A4C;
+    --azul: #4A90C4;
+    --verde: #4FA97E;
+    --rosa: #DB6BA0;
+    --preto: #4A4540;
+    --shadow: 0 6px 0 rgba(0,0,0,0.08);
+  }
+  *{ box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
+  html,body{
+    margin:0; padding:0; height:100%;
+    font-family: 'Trebuchet MS', 'Verdana', sans-serif;
+    background: linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+    color: var(--ink);
+    overscroll-behavior: none;
+    user-select: none;
+  }
+  #app{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding: 18px 14px 34px;
+  }
+  .screen{ display:none; width:100%; max-width:520px; }
+  .screen.active{ display:flex; flex-direction:column; align-items:center; }
+
+  h1{
+    font-size: 1.6rem;
+    text-align:center;
+    margin: 6px 0 4px;
+    color: var(--ink);
+  }
+  p.sub{
+    text-align:center;
+    color:#6B6459;
+    margin:0 0 18px;
+    font-size:0.95rem;
+    max-width: 380px;
+  }
+
+  .team-row{
+    display:flex;
+    justify-content:center;
+    align-items:flex-end;
+    gap:10px;
+    margin: 6px 0 22px;
+    height: 78px;
+  }
+  .hero-dot{
+    width:46px; height:46px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow: var(--shadow);
+    border: 3px solid rgba(0,0,0,0.08);
+  }
+  .jumper{
+    display:flex; align-items:flex-end;
+    animation: jumpWave 2.5s infinite ease-in-out;
+  }
+  .jumper svg{ display:block; }
+  @keyframes jumpWave{
+    0%   { transform: translateY(0) rotate(0deg); }
+    4%   { transform: translateY(-22px) rotate(-6deg); }
+    9%   { transform: translateY(0) rotate(0deg); }
+    100% { transform: translateY(0) rotate(0deg); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .jumper{ animation: none; }
+  }
+
+  .menu-card{
+    width:100%;
+    background: var(--card);
+    border-radius: 22px;
+    box-shadow: var(--shadow);
+    padding: 20px;
+    margin-bottom: 16px;
+    display:flex;
+    align-items:center;
+    gap: 14px;
+    border: 2px solid var(--line);
+    cursor:pointer;
+  }
+  .menu-card:active{ transform: translateY(3px); box-shadow:none; }
+  .menu-icon{
+    width:56px; height:56px; flex-shrink:0;
+    border-radius: 16px;
+    display:flex; align-items:center; justify-content:center;
+    font-size: 1.8rem;
+  }
+  .menu-text h2{ margin:0 0 4px; font-size:1.15rem; }
+  .menu-text p{ margin:0; font-size:0.85rem; color:#6B6459; }
+
+  .topbar{
+    width:100%; max-width:520px;
+    display:flex; align-items:center; justify-content:space-between;
+    margin-bottom: 10px;
+  }
+  .back-btn{
+    background: var(--card);
+    border: 2px solid var(--line);
+    border-radius: 14px;
+    padding: 8px 14px;
+    font-size: 0.95rem;
+    color: var(--ink);
+    cursor:pointer;
+    box-shadow: var(--shadow);
+  }
+  .back-btn:active{ transform: translateY(3px); box-shadow:none; }
+
+  /* Coloring */
+  .color-wrap{
+    width:100%;
+    background: var(--card);
+    border-radius: 22px;
+    padding: 16px;
+    border: 2px solid var(--line);
+    box-shadow: var(--shadow);
+  }
+  #heroSvgHolder{ display:flex; justify-content:center; margin-bottom: 14px; }
+  #heroSvgHolder svg{ width: 220px; height: auto; touch-action: manipulation; }
+  .hero-nav{
+    display:flex; align-items:center; justify-content:center; gap:10px;
+  }
+  .nav-arrow{
+    width:44px; height:44px; flex-shrink:0;
+    border-radius:50%;
+    border:none;
+    background: var(--amarelo);
+    font-size:1.3rem;
+    font-weight:bold;
+    color: var(--ink);
+    box-shadow: 0 4px 0 rgba(0,0,0,0.15);
+    cursor:pointer;
+  }
+  .nav-arrow:active{ transform: translateY(3px); box-shadow:none; }
+  .hero-counter{
+    text-align:center;
+    font-size:0.85rem;
+    color:#6B6459;
+    margin: 8px 0 4px;
+  }
+  .palette{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .swatch{
+    width:38px; height:38px;
+    border-radius:50%;
+    border: 3px solid white;
+    box-shadow: 0 0 0 2px var(--line);
+    cursor:pointer;
+  }
+  .swatch.selected{ box-shadow: 0 0 0 3px var(--ink); }
+  .hint{
+    text-align:center;
+    font-size: 0.85rem;
+    color:#6B6459;
+    margin-top: 12px;
+  }
+
+  /* Word game */
+  .word-wrap{
+    width:100%;
+    background: var(--card);
+    border-radius: 22px;
+    padding: 20px;
+    border: 2px solid var(--line);
+    box-shadow: var(--shadow);
+    text-align:center;
+  }
+  .word-emoji{ font-size: 3rem; margin-bottom: 6px; }
+  .word-clue{ font-size:1rem; color:#6B6459; margin-bottom: 16px; }
+  .slots{
+    display:flex; justify-content:center; gap:8px;
+    margin-bottom: 22px; flex-wrap:wrap;
+  }
+  .slot{
+    width:38px; height:44px;
+    border-bottom: 4px solid var(--line);
+    display:flex; align-items:center; justify-content:center;
+    font-size:1.4rem; font-weight:bold;
+  }
+  .slot.filled{ border-bottom-color: var(--verde); color: var(--verde); }
+  .letters{
+    display:flex; justify-content:center; gap:8px; flex-wrap:wrap;
+  }
+  .letter-tile{
+    width:44px; height:44px;
+    background: var(--amarelo);
+    border-radius: 12px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:1.3rem; font-weight:bold;
+    color: var(--ink);
+    box-shadow: 0 4px 0 rgba(0,0,0,0.15);
+    cursor:pointer;
+  }
+  .letter-tile:active{ transform: translateY(3px); box-shadow:none; }
+  .letter-tile.used{ visibility:hidden; }
+  .progress{ margin-top:16px; font-size:0.85rem; color:#6B6459; }
+  .next-btn{
+    margin-top:18px;
+    background: var(--verde);
+    color:white;
+    border:none;
+    border-radius:16px;
+    padding: 12px 26px;
+    font-size:1rem;
+    font-weight:bold;
+    box-shadow: 0 5px 0 rgba(0,0,0,0.15);
+    cursor:pointer;
+    display:none;
+  }
+  .next-btn.show{ display:inline-block; }
+  .next-btn:active{ transform: translateY(4px); box-shadow:none; }
+
+  /* Final */
+  .final-wrap{
+    width:100%;
+    background: var(--card);
+    border-radius: 24px;
+    padding: 28px 22px;
+    border: 2px solid var(--line);
+    box-shadow: var(--shadow);
+    text-align:center;
+  }
+  .final-heroes{
+    display:flex; justify-content:center; gap:10px; margin-bottom:18px;
+  }
+  .final-wrap h2{ margin: 4px 0 14px; font-size:1.3rem; }
+  .final-wrap p{ font-size:1rem; line-height:1.5; color:#4B463F; }
+  .restart-btn{
+    margin-top: 20px;
+    background: var(--azul);
+    color:white;
+    border:none;
+    border-radius:16px;
+    padding: 12px 26px;
+    font-size:1rem;
+    font-weight:bold;
+    box-shadow: 0 5px 0 rgba(0,0,0,0.15);
+    cursor:pointer;
+  }
+  .restart-btn:active{ transform: translateY(4px); box-shadow:none; }
+
+  footer{
+    margin-top: 22px;
+    font-size: 0.75rem;
+    color: #A39C8E;
+    text-align:center;
+  }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- MENU -->
+  <section class="screen active" id="screen-menu">
+    <h1>Guardiões do Bem</h1>
+    <p class="sub">Uma aventura para colorir, formar palavras e aprender que, juntos, dá pra transformar o mundo!</p>
+
+    <div class="team-row" id="teamRow"></div>
+
+    <div class="menu-card" onclick="goTo('color')">
+      <div class="menu-icon" style="background:#FDECC8;">🎨</div>
+      <div class="menu-text"><h2>Colorir o Herói</h2><p>Escolha as cores e pinte o guardião</p></div>
+    </div>
+
+    <div class="menu-card" onclick="goTo('word')">
+      <div class="menu-icon" style="background:#DDEFE6;">🔤</div>
+      <div class="menu-text"><h2>Formar Palavras</h2><p>Monte palavras da equipe do bem</p></div>
+    </div>
+
+    <div class="menu-card" onclick="goTo('final')">
+      <div class="menu-icon" style="background:#F6DDE8;">💛</div>
+      <div class="menu-text"><h2>Mensagem Final</h2><p>Descubra o poder de fazer o bem</p></div>
+    </div>
+
+    <footer>Feito com carinho para pequenos heróis · toque na tela para começar</footer>
+  </section>
+
+  <!-- COLORIR -->
+  <section class="screen" id="screen-color">
+    <div class="topbar">
+      <button class="back-btn" onclick="goTo('menu')">← Voltar</button>
+      <button class="back-btn" onclick="resetColoring()">Limpar</button>
+    </div>
+    <div class="color-wrap">
+      <div class="hero-nav">
+        <button class="nav-arrow" id="prevHero" onclick="prevHero()">←</button>
+        <div id="heroSvgHolder"></div>
+        <button class="nav-arrow" id="nextHero" onclick="nextHero()">→</button>
+      </div>
+      <div class="hero-counter" id="heroCounter"></div>
+      <div class="palette" id="palette"></div>
+      <p class="hint">Toque numa cor e depois numa parte do herói para pintar. Use as setinhas para trocar de herói.</p>
+    </div>
+  </section>
+
+  <!-- PALAVRAS -->
+  <section class="screen" id="screen-word">
+    <div class="topbar">
+      <button class="back-btn" onclick="goTo('menu')">← Voltar</button>
+      <div></div>
+    </div>
+    <div class="word-wrap">
+      <div class="word-emoji" id="wordEmoji">🦸</div>
+      <div class="word-clue" id="wordClue">Monte a palavra:</div>
+      <div class="slots" id="slots"></div>
+      <div class="letters" id="letters"></div>
+      <div class="progress" id="progress"></div>
+      <button class="next-btn" id="nextBtn" onclick="nextWord()">Próxima palavra →</button>
+    </div>
+  </section>
+
+  <!-- FINAL -->
+  <section class="screen" id="screen-final">
+    <div class="topbar">
+      <button class="back-btn" onclick="goTo('menu')">← Voltar</button>
+      <div></div>
+    </div>
+    <div class="final-wrap">
+      <div class="final-heroes" id="finalHeroes"></div>
+      <h2>Você é um Guardião do Bem! 🌎💛</h2>
+      <p>E junto com seus amigos, você tem super poderes:</p>
+      <p style="text-align:left; max-width:320px; margin:0 auto 14px;">
+        🌟 Seja gentil<br>
+        🤝 Ajude quem precisa<br>
+        🌱 Cuide da natureza<br>
+        💬 Sempre diga a verdade
+      </p>
+      <p><strong>Transforme o mundo inteiro!</strong></p>
+      <button class="restart-btn" onclick="goTo('menu')">Voltar ao início</button>
+      <p style="margin-top:26px; font-size:0.78rem; color:#A39C8E;">
+        App desenvolvido por @chicatelier.br<br>como presente digital do aniversário de 5 anos de<br><strong>Aziz Padilha Seck</strong> 🎂
+      </p>
+    </div>
+  </section>
+
+</div>
+
+<script>
+/* ---------- Navegação ---------- */
+function goTo(name){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+name).classList.add('active');
+  if(name==='color' && !window._colorInit){ initColoring(); window._colorInit=true; }
+  if(name==='word' && !window._wordInit){ initWordGame(); window._wordInit=true; }
+  window.scrollTo(0,0);
+}
+
+/* ---------- Cores da equipe ---------- */
+const teamColors = [
+  {name:'vermelho', hex:'#E15A4C'},
+  {name:'azul', hex:'#4A90C4'},
+  {name:'preto', hex:'#4A4540'},
+  {name:'rosa', hex:'#DB6BA0'},
+  {name:'verde', hex:'#4FA97E'}
+];
+
+function miniHeroSvg(hex, size){
+  return `<svg width="${size}" height="${size*1.15}" viewBox="0 0 60 70" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="30" cy="20" rx="17" ry="16" fill="${hex}" stroke="#333" stroke-width="2.5"/>
+    <path d="M15 24 Q30 34 45 24 Q40 30 30 31 Q20 30 15 24 Z" fill="#EDEDED" stroke="#333" stroke-width="2"/>
+    <rect x="16" y="34" width="28" height="26" rx="8" fill="${hex}" stroke="#333" stroke-width="2.5"/>
+    <polygon points="30,40 33,47 41,47 34,52 37,59 30,54 23,59 26,52 19,47 27,47" fill="#F5C542" stroke="#333" stroke-width="1.5"/>
+    <rect x="4" y="37" width="10" height="20" rx="5" fill="${hex}" stroke="#333" stroke-width="2.5"/>
+    <rect x="46" y="37" width="10" height="20" rx="5" fill="${hex}" stroke="#333" stroke-width="2.5"/>
+    <rect x="18" y="60" width="10" height="10" rx="3" fill="#333"/>
+    <rect x="32" y="60" width="10" height="10" rx="3" fill="#333"/>
+  </svg>`;
+}
+
+function renderDots(containerId, size, animated){
+  const el = document.getElementById(containerId);
+  el.innerHTML = teamColors.map((c,i)=>{
+    const delay = (i * 0.5).toFixed(1);
+    const wrapClass = animated ? 'jumper' : '';
+    const style = animated ? `animation-delay:${delay}s;` : '';
+    return `<div class="${wrapClass}" style="${style}">${miniHeroSvg(c.hex, size)}</div>`;
+  }).join('');
+}
+renderDots('teamRow', 44, true);
+renderDots('finalHeroes', 40, true);
+
+/* ---------- Atividade: Colorir ---------- */
+const heroTemplates = [
+  { label:'Herói em pé',
+    fills:{'p-corpo':'#EDEDED','p-cinto':'#CFCFCF','p-braco-e':'#EDEDED','p-braco-d':'#EDEDED',
+      'p-estrela':'#F5C542','p-capacete':'#EDEDED','p-viseira':'#DADADA','p-crista':'#CFCFCF',
+      'p-bota-e':'#EDEDED','p-bota-d':'#EDEDED'},
+    svg:`<svg viewBox="0 0 220 320" xmlns="http://www.w3.org/2000/svg">
+      <rect id="p-corpo" x="60" y="140" width="100" height="120" rx="24" fill="#EDEDED" stroke="#333" stroke-width="4"/>
+      <rect id="p-cinto" x="70" y="215" width="80" height="22" rx="6" fill="#CFCFCF" stroke="#333" stroke-width="4"/>
+      <circle cx="110" cy="226" r="10" fill="#F5C542" stroke="#333" stroke-width="3"/>
+      <rect id="p-braco-e" x="30" y="150" width="30" height="90" rx="14" fill="#EDEDED" stroke="#333" stroke-width="4"/>
+      <rect id="p-braco-d" x="160" y="150" width="30" height="90" rx="14" fill="#EDEDED" stroke="#333" stroke-width="4"/>
+      <polygon id="p-estrela" points="110,155 118,172 137,172 122,183 128,201 110,190 92,201 98,183 83,172 102,172" fill="#F5C542" stroke="#333" stroke-width="3"/>
+      <ellipse id="p-capacete" cx="110" cy="90" rx="58" ry="55" fill="#EDEDED" stroke="#333" stroke-width="4"/>
+      <path id="p-viseira" d="M65 85 Q110 60 155 85 Q140 115 110 118 Q80 115 65 85 Z" fill="#DADADA" stroke="#333" stroke-width="4"/>
+      <polygon id="p-crista" points="95,38 110,10 125,38 110,50" fill="#CFCFCF" stroke="#333" stroke-width="3"/>
+      <rect id="p-bota-e" x="65" y="258" width="34" height="30" rx="8" fill="#EDEDED" stroke="#333" stroke-width="4"/>
+      <rect id="p-bota-d" x="121" y="258" width="34" height="30" rx="8" fill="#EDEDED" stroke="#333" stroke-width="4"/>
+    </svg>` },
+
+  { label:'Herói comemorando',
+    fills:{'p-corpo':'#EDEDED','p-cinto':'#CFCFCF','p-braco-e':'#EDEDED','p-braco-d':'#EDEDED',
+      'p-estrela':'#F5C542','p-capacete':'#EDEDED','p-viseira':'#DADADA','p-crista':'#CFCFCF',
+      'p-bota-e':'#EDEDED','p-bota-d':'#EDEDED'},
+    svg:`<svg viewBox="0 0 220 320" xmlns="http://www.w3.org/2000/svg">
+      <rect id="p-corpo" x="60" y="150" width="100" height="115" rx="24" fill="#EDEDED" stroke="#333" stroke-width="4"/>
+      <rect id="p-cinto" x="70" y="220" width="80" height="22" rx="6" fill="#CFCFCF" stroke="#333" stroke-width="4"/>
+      <circle cx="110" cy="231" r="10" fill="#F5C542" stroke="#333" stroke-width="3"/>
+      <rect id="p-braco-e" x="30" y="160" width="28" height="85" rx="14" fill="#EDEDED" stroke="#333" stroke-width="4" transform="rotate(-165 44 160)"/>
+      <rect id="p-braco-d" x="162" y="160" width="28" height="85" rx="14" fill="#EDEDED" stroke="#333" stroke-width="4" transform="rotate(165 176 160)"/>
+      <polygon id="p-estrela" points="110,163 118,180 137,180 122,191 128,209 110,198 92,209 98,191 83,180 102,180" fill="#F5C542" stroke="#333" stroke-width="3"/>
+      <ellipse id="p-capacete" cx="110" cy="95" rx="56" ry="53" fill="#EDEDED" stroke="#333" stroke-width="4"/>
+      <path id="p-viseira" d="M67 90 Q110 66 153 90 Q138 118 110 121 Q82 118 67 90 Z" fill="#DADADA" stroke="#333" stroke-width="4"/>
+      <polygon id="p-crista" points="96,45 110,18 124,45 110,56" fill="#CFCFCF" stroke="#333" stroke-width="3"/>
+      <rect id="p-bota-e" x="68" y="258" width="32" height="30" rx="8" fill="#EDEDED" stroke="#333" stroke-width="4" transform="rotate(-8 84 273)"/>
+      <rect id="p-bota-d" x="120" y="258" width="32" height="30" rx="8" fill="#EDEDED" stroke="#333" stroke-width="4" transform="rotate(8 136 273)"/>
+    </svg>` },
+
+  { label:'Herói pronto pra ação',
+    fills:{'p-corpo':'#EDEDED','p-cinto':'#CFCFCF','p-braco-e':'#EDEDED','p-braco-d':'#EDEDED',
+      'p-estrela':'#F5C542','p-capacete':'#EDEDED','p-viseira':'#DADADA','p-crista':'#CFCFCF',
+      'p-bota-e':'#EDEDED','p-bota-d':'#EDEDED'},
+    svg:`<svg viewBox="0 0 220 320" xmlns="http://www.w3.org/2000/svg">
+      <rect id="p-corpo" x="60" y="145" width="100" height="110" rx="22" fill="#EDEDED" stroke="#333" stroke-width="4"/>
+      <rect id="p-cinto" x="70" y="215" width="80" height="22" rx="6" fill="#CFCFCF" stroke="#333" stroke-width="4"/>
+      <circle cx="110" cy="226" r="10" fill="#F5C542" stroke="#333" stroke-width="3"/>
+      <rect id="p-braco-e" x="24" y="150" width="28" height="70" rx="14" fill="#EDEDED" stroke="#333" stroke-width="4" transform="rotate(-55 38 150)"/>
+      <rect id="p-braco-d" x="168" y="150" width="28" height="70" rx="14" fill="#EDEDED" stroke="#333" stroke-width="4" transform="rotate(55 182 150)"/>
+      <polygon id="p-estrela" points="110,158 118,175 137,175 122,186 128,204 110,193 92,204 98,186 83,175 102,175" fill="#F5C542" stroke="#333" stroke-width="3"/>
+      <ellipse id="p-capacete" cx="110" cy="90" rx="58" ry="55" fill="#EDEDED" stroke="#333" stroke-width="4"/>
+      <path id="p-viseira" d="M65 85 Q110 60 155 85 Q140 115 110 118 Q80 115 65 85 Z" fill="#DADADA" stroke="#333" stroke-width="4"/>
+      <polygon id="p-crista" points="95,38 110,10 125,38 110,50" fill="#CFCFCF" stroke="#333" stroke-width="3"/>
+      <rect id="p-bota-e" x="40" y="252" width="34" height="32" rx="8" fill="#EDEDED" stroke="#333" stroke-width="4" transform="rotate(-18 57 268)"/>
+      <rect id="p-bota-d" x="146" y="252" width="34" height="32" rx="8" fill="#EDEDED" stroke="#333" stroke-width="4" transform="rotate(18 163 268)"/>
+    </svg>` },
+
+  { label:'Herói voador',
+    fills:{'p-corpo':'#EDEDED','p-capa':'#E15A4C','p-braco-e':'#EDEDED','p-braco-d':'#EDEDED',
+      'p-estrela':'#F5C542','p-capacete':'#EDEDED','p-viseira':'#DADADA','p-crista':'#CFCFCF',
+      'p-bota-e':'#EDEDED','p-bota-d':'#EDEDED'},
+    svg:`<svg viewBox="0 0 220 320" xmlns="http://www.w3.org/2000/svg">
+      <polygon id="p-capa" points="70,150 30,270 110,235 190,270 150,150" fill="#E15A4C" stroke="#333" stroke-width="4"/>
+      <rect id="p-corpo" x="63" y="145" width="94" height="105" rx="22" fill="#EDEDED" stroke="#333" stroke-width="4"/>
+      <rect id="p-braco-e" x="28" y="150" width="28" height="80" rx="14" fill="#EDEDED" stroke="#333" stroke-width="4" transform="rotate(35 42 150)"/>
+      <rect id="p-braco-d" x="164" y="150" width="28" height="80" rx="14" fill="#EDEDED" stroke="#333" stroke-width="4" transform="rotate(-100 178 150)"/>
+      <polygon id="p-estrela" points="110,158 118,175 137,175 122,186 128,204 110,193 92,204 98,186 83,175 102,175" fill="#F5C542" stroke="#333" stroke-width="3"/>
+      <ellipse id="p-capacete" cx="110" cy="90" rx="56" ry="53" fill="#EDEDED" stroke="#333" stroke-width="4"/>
+      <path id="p-viseira" d="M67 86 Q110 62 153 86 Q138 114 110 117 Q82 114 67 86 Z" fill="#DADADA" stroke="#333" stroke-width="4"/>
+      <polygon id="p-crista" points="96,42 110,15 124,42 110,53" fill="#CFCFCF" stroke="#333" stroke-width="3"/>
+      <rect id="p-bota-e" x="88" y="248" width="20" height="34" rx="8" fill="#EDEDED" stroke="#333" stroke-width="4" transform="rotate(12 98 265)"/>
+      <rect id="p-bota-d" x="112" y="248" width="20" height="34" rx="8" fill="#EDEDED" stroke="#333" stroke-width="4" transform="rotate(-12 122 265)"/>
+    </svg>` },
+
+  { label:'Herói acenando',
+    fills:{'p-corpo':'#EDEDED','p-cinto':'#CFCFCF','p-braco-e':'#EDEDED','p-braco-d':'#EDEDED',
+      'p-estrela':'#F5C542','p-capacete':'#EDEDED','p-viseira':'#DADADA','p-crista':'#CFCFCF',
+      'p-bota-e':'#EDEDED','p-bota-d':'#EDEDED'},
+    svg:`<svg viewBox="0 0 220 320" xmlns="http://www.w3.org/2000/svg">
+      <rect id="p-corpo" x="60" y="140" width="100" height="120" rx="24" fill="#EDEDED" stroke="#333" stroke-width="4"/>
+      <rect id="p-cinto" x="70" y="215" width="80" height="22" rx="6" fill="#CFCFCF" stroke="#333" stroke-width="4"/>
+      <circle cx="110" cy="226" r="10" fill="#F5C542" stroke="#333" stroke-width="3"/>
+      <rect id="p-braco-e" x="30" y="150" width="30" height="90" rx="14" fill="#EDEDED" stroke="#333" stroke-width="4"/>
+      <rect id="p-braco-d" x="160" y="150" width="26" height="85" rx="13" fill="#EDEDED" stroke="#333" stroke-width="4" transform="rotate(178 173 150)"/>
+      <polygon id="p-estrela" points="110,155 118,172 137,172 122,183 128,201 110,190 92,201 98,183 83,172 102,172" fill="#F5C542" stroke="#333" stroke-width="3"/>
+      <ellipse id="p-capacete" cx="105" cy="90" rx="58" ry="55" fill="#EDEDED" stroke="#333" stroke-width="4" transform="rotate(-6 105 90)"/>
+      <path id="p-viseira" d="M60 85 Q105 60 150 85 Q135 115 105 118 Q75 115 60 85 Z" fill="#DADADA" stroke="#333" stroke-width="4" transform="rotate(-6 105 90)"/>
+      <polygon id="p-crista" points="90,38 105,10 120,38 105,50" fill="#CFCFCF" stroke="#333" stroke-width="3" transform="rotate(-6 105 90)"/>
+      <rect id="p-bota-e" x="65" y="258" width="34" height="30" rx="8" fill="#EDEDED" stroke="#333" stroke-width="4"/>
+      <rect id="p-bota-d" x="121" y="258" width="34" height="30" rx="8" fill="#EDEDED" stroke="#333" stroke-width="4"/>
+    </svg>` },
+
+  { label:'Robô amigo',
+    fills:{'p-corpo':'#EDEDED','p-cabeca':'#EDEDED','p-visor':'#4A4540','p-antena':'#F5C542',
+      'p-luz':'#F5C542','p-braco-e':'#EDEDED','p-braco-d':'#EDEDED','p-perna-e':'#CFCFCF',
+      'p-perna-d':'#CFCFCF','p-pe-e':'#CFCFCF','p-pe-d':'#CFCFCF'},
+    svg:`<svg viewBox="0 0 220 320" xmlns="http://www.w3.org/2000/svg">
+      <g id="p-antena" fill="#F5C542">
+        <rect x="104" y="28" width="12" height="20" rx="3" stroke="#333" stroke-width="3"/>
+        <circle cx="110" cy="20" r="9" stroke="#333" stroke-width="3"/>
+      </g>
+      <rect id="p-cabeca" x="72" y="46" width="76" height="58" rx="12" fill="#EDEDED" stroke="#333" stroke-width="4"/>
+      <rect id="p-visor" x="88" y="64" width="44" height="20" rx="7" fill="#4A4540" stroke="#333" stroke-width="3"/>
+      <rect id="p-braco-e" x="24" y="118" width="26" height="82" rx="10" fill="#EDEDED" stroke="#333" stroke-width="4"/>
+      <rect id="p-braco-d" x="170" y="118" width="26" height="82" rx="10" fill="#EDEDED" stroke="#333" stroke-width="4"/>
+      <rect id="p-corpo" x="62" y="112" width="96" height="102" rx="16" fill="#EDEDED" stroke="#333" stroke-width="4"/>
+      <circle id="p-luz" cx="110" cy="152" r="15" fill="#F5C542" stroke="#333" stroke-width="3"/>
+      <rect x="78" y="178" width="64" height="10" rx="4" fill="#CFCFCF" stroke="#333" stroke-width="2"/>
+      <rect id="p-perna-e" x="76" y="214" width="26" height="48" rx="8" fill="#CFCFCF" stroke="#333" stroke-width="4"/>
+      <rect id="p-perna-d" x="118" y="214" width="26" height="48" rx="8" fill="#CFCFCF" stroke="#333" stroke-width="4"/>
+      <rect id="p-pe-e" x="66" y="260" width="42" height="20" rx="6" fill="#CFCFCF" stroke="#333" stroke-width="4"/>
+      <rect id="p-pe-d" x="112" y="260" width="42" height="20" rx="6" fill="#CFCFCF" stroke="#333" stroke-width="4"/>
+    </svg>` }
+];
+
+let selectedColor = teamColors[0].hex;
+const totalHeroes = heroTemplates.length;
+let currentHeroIndex = 0;
+let heroFills = heroTemplates.map(t => ({...t.fills}));
+
+function renderHero(){
+  const template = heroTemplates[currentHeroIndex];
+  document.getElementById('heroSvgHolder').innerHTML = template.svg;
+  const svg = document.querySelector('#heroSvgHolder svg');
+  const state = heroFills[currentHeroIndex];
+  svg.querySelectorAll('[id^="p-"]').forEach(part=>{
+    if(state[part.id]) part.setAttribute('fill', state[part.id]);
+    part.style.cursor = 'pointer';
+    part.addEventListener('click', ()=>{
+      part.setAttribute('fill', selectedColor);
+      state[part.id] = selectedColor;
+    });
+  });
+  document.getElementById('heroCounter').textContent = `${template.label} — ${currentHeroIndex+1} de ${totalHeroes}`;
+}
+
+function initColoring(){
+  renderHero();
+  const pal = document.getElementById('palette');
+  pal.innerHTML = teamColors.concat([{name:'amarelo',hex:'#F5C542'},{name:'branco',hex:'#FFFFFF'}]).map((c,i)=>{
+    return `<div class="swatch ${i===0?'selected':''}" data-hex="${c.hex}" style="background:${c.hex}"></div>`;
+  }).join('');
+  pal.querySelectorAll('.swatch').forEach(sw=>{
+    sw.addEventListener('click', ()=>{
+      pal.querySelectorAll('.swatch').forEach(s=>s.classList.remove('selected'));
+      sw.classList.add('selected');
+      selectedColor = sw.dataset.hex;
+    });
+  });
+}
+function prevHero(){
+  currentHeroIndex = (currentHeroIndex - 1 + totalHeroes) % totalHeroes;
+  renderHero();
+}
+function nextHero(){
+  currentHeroIndex = (currentHeroIndex + 1) % totalHeroes;
+  renderHero();
+}
+function resetColoring(){
+  heroFills[currentHeroIndex] = {...heroTemplates[currentHeroIndex].fills};
+  renderHero();
+}
+
+/* ---------- Atividade: Formar Palavras ---------- */
+const words = [
+  {word:'TIME', emoji:'🦸‍♂️🦸‍♀️', clue:'Todos juntos formam um...'},
+  {word:'AMOR', emoji:'💛', clue:'O que sentimos por quem cuidamos'},
+  {word:'UNIÃO', emoji:'🤝', clue:'Quando todos se juntam'},
+  {word:'AJUDAR', emoji:'🙌', clue:'O que um bom herói sempre faz'},
+  {word:'AMIGO', emoji:'👫', clue:'Alguém que está sempre com você'},
+  {word:'BEM', emoji:'🌟', clue:'O que os heróis sempre escolhem fazer'}
+];
+let wordIndex = 0;
+let currentWord = '';
+let builtSlots = [];
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+function initWordGame(){
+  wordIndex = 0;
+  loadWord();
+}
+
+function loadWord(){
+  const w = words[wordIndex];
+  currentWord = w.word;
+  builtSlots = new Array(currentWord.length).fill(null);
+  document.getElementById('wordEmoji').textContent = w.emoji;
+  document.getElementById('wordClue').textContent = w.clue;
+  document.getElementById('progress').textContent = `Palavra ${wordIndex+1} de ${words.length}`;
+  document.getElementById('nextBtn').classList.remove('show');
+
+  const slotsEl = document.getElementById('slots');
+  slotsEl.innerHTML = currentWord.split('').map((_,i)=>`<div class="slot" id="slot-${i}"></div>`).join('');
+
+  const lettersScrambled = shuffle(currentWord.split(''));
+  const lettersEl = document.getElementById('letters');
+  lettersEl.innerHTML = lettersScrambled.map((ch,i)=>`<div class="letter-tile" id="tile-${i}" data-ch="${ch}" onclick="pickLetter(${i})">${ch}</div>`).join('');
+}
+
+function pickLetter(tileIdx){
+  const tile = document.getElementById('tile-'+tileIdx);
+  if(tile.classList.contains('used')) return;
+  const nextSlot = builtSlots.findIndex(s=>s===null);
+  if(nextSlot === -1) return;
+  const ch = tile.dataset.ch;
+  const expected = currentWord[nextSlot];
+  if(ch !== expected){
+    tile.style.transition='transform 0.15s';
+    tile.style.transform='translateX(-4px)';
+    setTimeout(()=>{ tile.style.transform='translateX(4px)'; },80);
+    setTimeout(()=>{ tile.style.transform='translateX(0)'; },160);
+    return;
+  }
+  builtSlots[nextSlot] = ch;
+  tile.classList.add('used');
+  const slotEl = document.getElementById('slot-'+nextSlot);
+  slotEl.textContent = ch;
+  slotEl.classList.add('filled');
+
+  if(builtSlots.every(s=>s!==null)){
+    setTimeout(()=>{
+      document.getElementById('nextBtn').classList.add('show');
+    }, 300);
+  }
+}
+
+function nextWord(){
+  wordIndex++;
+  if(wordIndex >= words.length){
+    goTo('final');
+    return;
+  }
+  loadWord();
+}
+</script>
+</body>
+</html>
