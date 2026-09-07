@@ -3,11 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
-<title>Guardiões do Bem</title>
+<title>Aziz e os Guardiões do Bem</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg: #EAF6F2;
-    --bg2: #FFF7E8;
+    --bg: #EAF6FF;
+    --bg2: #D6ECFB;
     --ink: #2E2A26;
     --card: #FFFFFF;
     --line: #D9CFC0;
@@ -39,11 +41,46 @@
   .screen.active{ display:flex; flex-direction:column; align-items:center; }
 
   h1{
-    font-size: 1.6rem;
+    font-family: 'Bangers', 'Trebuchet MS', cursive;
+    font-weight: normal;
+    font-size: 2.1rem;
+    letter-spacing: 1px;
     text-align:center;
-    margin: 6px 0 4px;
-    color: var(--ink);
+    margin: 8px 0 4px;
+    color: #1B2A55;
+    line-height: 1.15;
   }
+  h2{
+    font-family: 'Bangers', 'Trebuchet MS', cursive;
+    font-weight: normal;
+    letter-spacing: 0.5px;
+    color: #1B2A55;
+    font-size: 1.4rem;
+  }
+  .banner-illustration{
+    position:relative;
+    width:100%;
+    max-width:360px;
+    height:210px;
+    margin: 0 auto 8px;
+    border-radius: 20px;
+    overflow:hidden;
+    box-shadow: var(--shadow);
+  }
+  .banner-scene{ position:absolute; inset:0; z-index:0; }
+  .banner-scene svg{ width:100%; height:100%; display:block; }
+  .banner-heroes{
+    position:absolute;
+    left:0; right:0; bottom:16px;
+    z-index:1;
+    display:flex;
+    align-items:flex-end;
+    justify-content:center;
+    gap:0px;
+  }
+  .side-hero svg{ display:block; width:52px; height:auto; }
+  .big-hero{ position:relative; z-index:2; }
+  .big-hero svg{ width:64px; height:auto; filter: drop-shadow(0 6px 5px rgba(0,0,0,0.18)); }
   p.sub{
     text-align:center;
     color:#6B6459;
@@ -103,6 +140,233 @@
   }
   .menu-text h2{ margin:0 0 4px; font-size:1.15rem; }
   .menu-text p{ margin:0; font-size:0.85rem; color:#6B6459; }
+
+  .start-btn{
+    display:block;
+    margin: 18px auto 6px;
+    background: linear-gradient(160deg, #FDE16A, var(--amarelo));
+    border: none;
+    border-radius: 999px;
+    padding: 18px 34px;
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #4A3200;
+    box-shadow: 0 6px 0 #C99A2E, 0 0 24px rgba(253,225,106,0.7);
+    cursor:pointer;
+    animation: startPulse 2.2s infinite ease-in-out;
+  }
+  .start-btn:active{ transform: translateY(4px); box-shadow: 0 2px 0 #C99A2E; }
+  .start-btn.small{
+    display:inline-block;
+    margin: 18px auto 0;
+    padding: 14px 30px;
+    font-size: 1.05rem;
+    animation: none;
+  }
+  @keyframes startPulse{
+    0%,100%{ transform: scale(1); }
+    50%{ transform: scale(1.045); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .start-btn{ animation: none; }
+  }
+
+  .missions-title{
+    font-family: 'Bangers', 'Trebuchet MS', cursive;
+    font-size: 1.7rem;
+    color: #1B2A55;
+    text-align:center;
+    margin: 10px 0 16px;
+  }
+  .mission-grid{
+    display:grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    width:100%;
+    margin-bottom: 16px;
+  }
+  .mission-card{
+    position:relative;
+    border-radius: 20px;
+    border: none;
+    padding: 14px 8px 12px;
+    display:flex; flex-direction:column; align-items:center; gap:6px;
+    box-shadow: var(--shadow);
+    cursor:pointer;
+  }
+  .mission-card:active{ transform: translateY(3px); box-shadow:none; }
+  .mission-card .mission-avatar{ position:relative; width:56px; height:auto; }
+  .mission-card .mission-avatar svg{ display:block; width:56px; height:auto; }
+  .mission-card .mission-badge{
+    position:absolute; bottom:-4px; right:-6px;
+    font-size:1.1rem;
+    background:white; border-radius:50%;
+    width:26px; height:26px;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow: 0 2px 0 rgba(0,0,0,0.12);
+  }
+  .mission-card .mission-name{
+    font-size:0.85rem; font-weight:bold; color: var(--ink);
+    text-align:center; line-height:1.2;
+  }
+  .mission-card.locked{ opacity:0.6; }
+  .mission-done{
+    position:absolute; top:-6px; left:-6px;
+    background: var(--amarelo);
+    border-radius:50%;
+    width:24px; height:24px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:0.85rem;
+    box-shadow: 0 2px 0 rgba(0,0,0,0.15);
+  }
+  .home-link{ margin: 4px auto 0; display:block; }
+  .love-link{ margin: 8px auto 0; display:block; color:#B5548A; }
+
+  .mission-complete-wrap{
+    width:100%;
+    background: var(--card);
+    border-radius: 24px;
+    padding: 30px 22px;
+    border: 2px solid var(--line);
+    box-shadow: var(--shadow);
+    text-align:center;
+    margin-top: 20px;
+  }
+  .mission-complete-star{
+    font-size: 3rem;
+    animation: starSpin 1.1s ease-out;
+  }
+  @keyframes starSpin{
+    0%{ transform: scale(0) rotate(0deg); opacity:0; }
+    60%{ transform: scale(1.3) rotate(200deg); opacity:1; }
+    100%{ transform: scale(1) rotate(360deg); }
+  }
+  .mission-complete-avatar{ display:flex; justify-content:center; margin: 6px 0 10px; }
+  .mission-complete-avatar svg{ width:88px; height:auto; }
+  #completeMsg{ color:#4B463F; font-size:1.05rem; margin-bottom: 8px; }
+  .stars-count{ font-size:0.9rem; color:#6B6459; margin-bottom: 6px; }
+
+  /* Montar */
+  .shape-tray{
+    display:flex; flex-wrap:wrap; justify-content:center; gap:10px;
+    margin: 10px 0;
+  }
+  .shape-slot{
+    width:52px; height:52px; border-radius:12px;
+    border: 3px dashed var(--line);
+    display:flex; align-items:center; justify-content:center;
+    font-size:1.4rem;
+  }
+  .shape-slot.filled{ border-style:solid; }
+  .shape-piece{
+    width:52px; height:52px; border-radius:12px;
+    border:none;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.15);
+    cursor:pointer;
+  }
+  .shape-piece.selected{ outline: 4px solid var(--ink); transform: translateY(-3px); }
+  .shape-piece.placed{ visibility:hidden; }
+  @keyframes shakeSlot{
+    0%,100%{ transform: translateX(0); }
+    25%{ transform: translateX(-5px); }
+    75%{ transform: translateX(5px); }
+  }
+  .shape-slot.shake{ animation: shakeSlot 0.3s; }
+
+  /* Detetive */
+  .detective-grid{
+    display:grid; grid-template-columns: repeat(3, 1fr); gap:12px;
+    max-width: 320px; margin: 14px auto;
+  }
+  .detective-item{
+    aspect-ratio:1; border-radius:16px; border:none;
+    background: var(--bg2);
+    font-size: 2.2rem;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.12);
+    cursor:pointer;
+  }
+  .detective-item:active{ transform: translateY(3px); box-shadow:none; }
+  .detective-item.correct{ background: #DFF3E3; }
+
+  /* Contagem */
+  .count-display{
+    font-size: 2.4rem; text-align:center; margin: 14px 0;
+    line-height:1.4;
+  }
+  .count-options{ display:flex; justify-content:center; gap:14px; }
+  .count-option{
+    width:60px; height:60px; border-radius:16px; border:none;
+    background: var(--amarelo); font-size:1.5rem; font-weight:bold;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.15); cursor:pointer;
+  }
+  .count-option:active{ transform: translateY(3px); box-shadow:none; }
+
+  /* Lógica */
+  .logic-sequence{ font-size:2rem; text-align:center; margin: 14px 0; letter-spacing:4px; }
+  .logic-options{ display:flex; justify-content:center; gap:14px; }
+  .logic-option{
+    width:60px; height:60px; border-radius:16px; border:none;
+    background: var(--bg2); font-size:1.7rem;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.15); cursor:pointer;
+  }
+  .logic-option:active{ transform: translateY(3px); box-shadow:none; }
+
+  /* Precisão */
+  .balloon-grid{
+    display:grid; grid-template-columns: repeat(4, 1fr); gap:10px;
+    max-width: 320px; margin: 16px auto;
+  }
+  .balloon{
+    aspect-ratio: 0.85; border:none; border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    font-size:0;
+    box-shadow: inset -6px -6px 0 rgba(0,0,0,0.08);
+    cursor:pointer;
+    animation: balloonBob 2.4s ease-in-out infinite;
+  }
+  .balloon:nth-child(odd){ animation-delay: -1.2s; }
+  .balloon.popped{ visibility:hidden; }
+  @keyframes balloonBob{
+    0%,100%{ transform: translateY(0); }
+    50%{ transform: translateY(-6px); }
+  }
+
+  .mission-intro-wrap{
+    width:100%;
+    background: var(--card);
+    border-radius: 22px;
+    padding: 26px 20px;
+    border: 2px solid var(--line);
+    box-shadow: var(--shadow);
+    text-align:center;
+  }
+  .mission-intro-avatar{ display:flex; justify-content:center; margin-bottom: 10px; }
+  .mission-intro-avatar svg{ width:96px; height:auto; }
+  #missionIntroTitle{
+    font-family: 'Bangers', 'Trebuchet MS', cursive;
+    font-size: 1.5rem;
+    color: #1B2A55;
+    margin: 4px 0 10px;
+  }
+  #missionIntroMsg{ color:#4B463F; font-size:1rem; margin-bottom: 6px; }
+
+  .toast{
+    position:fixed;
+    left:50%; bottom:24px;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--ink);
+    color:white;
+    padding: 12px 20px;
+    border-radius: 14px;
+    font-size:0.9rem;
+    opacity:0;
+    transition: opacity 0.25s, transform 0.25s;
+    pointer-events:none;
+    max-width: 80%;
+    text-align:center;
+    z-index: 50;
+  }
+  .toast.show{ opacity:1; transform: translateX(-50%) translateY(0); }
 
   .topbar{
     width:100%; max-width:520px;
@@ -213,6 +477,58 @@
   .letter-tile:active{ transform: translateY(3px); box-shadow:none; }
   .letter-tile.used{ visibility:hidden; }
   .progress{ margin-top:16px; font-size:0.85rem; color:#6B6459; }
+
+  .memory-wrap{
+    width:100%;
+    background: var(--card);
+    border-radius: 22px;
+    padding: 20px;
+    border: 2px solid var(--line);
+    box-shadow: var(--shadow);
+    text-align:center;
+  }
+  .memory-grid{
+    display:grid;
+    gap: 8px;
+    margin: 14px auto 6px;
+    max-width: 320px;
+  }
+  .memory-card{
+    aspect-ratio: 1 / 1;
+    border-radius: 12px;
+    border: none;
+    background: linear-gradient(160deg, var(--azul), #6FB3DD);
+    color: white;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.15);
+    cursor:pointer;
+    transition: transform 0.15s;
+  }
+  .memory-card:active{ transform: scale(0.94); }
+  .memory-card.flipped{
+    background: var(--card);
+    border: 2px solid var(--line);
+    box-shadow:none;
+  }
+  .memory-card.matched{
+    background: var(--card);
+    border: 2px solid var(--verde);
+    box-shadow:none;
+    cursor:default;
+    animation: matchPop 0.35s ease;
+  }
+  .memory-card.bonus{
+    background: var(--card);
+    border: 2px solid var(--amarelo);
+    box-shadow:none;
+    cursor:default;
+  }
+  @keyframes matchPop{
+    0%{ transform:scale(1); }
+    40%{ transform:scale(1.12); }
+    100%{ transform:scale(1); }
+  }
+  .memory-swatch{ width:70%; height:70%; border-radius:8px; }
   .next-btn{
     margin-top:18px;
     background: var(--verde);
@@ -269,35 +585,53 @@
 <body>
 <div id="app">
 
-  <!-- MENU -->
-  <section class="screen active" id="screen-menu">
-    <h1>Guardiões do Bem</h1>
-    <p class="sub">Uma aventura para colorir, formar palavras e aprender que, juntos, dá pra transformar o mundo!</p>
+  <!-- TELA 1: HOME -->
+  <section class="screen active" id="screen-home">
+    <div class="banner-illustration" id="menuBanner"></div>
+    <h1>Aziz e os Guardiões do Bem</h1>
+    <p class="sub">Uma aventura para colorir, formar palavras e aprender brincando!</p>
+    <button class="start-btn" onclick="goTo('missions')">⭐ Iniciar Missões</button>
+    <footer>Lembrança digital desenvolvida por @chicatelier.br</footer>
+  </section>
 
-    <div class="team-row" id="teamRow"></div>
+  <!-- TELA 2: ESCOLHA UMA MISSÃO -->
+  <section class="screen" id="screen-missions">
+    <h1 class="missions-title">⭐ Escolha uma Missão!</h1>
+    <div class="mission-grid" id="missionGrid"></div>
+    <button class="back-btn home-link" onclick="goTo('home')">🏠 Início</button>
+    <button class="back-btn love-link" onclick="goTo('final')">💌 Mensagem dos Guardiões</button>
+  </section>
 
-    <div class="menu-card" onclick="goTo('color')">
-      <div class="menu-icon" style="background:#FDECC8;">🎨</div>
-      <div class="menu-text"><h2>Colorir o Herói</h2><p>Escolha as cores e pinte o guardião</p></div>
+  <!-- TELA PONTE: INTRO DA MISSÃO -->
+  <section class="screen" id="screen-mission-intro">
+    <div class="topbar">
+      <button class="back-btn" onclick="goTo('missions')">← Voltar</button>
+      <div></div>
     </div>
-
-    <div class="menu-card" onclick="goTo('word')">
-      <div class="menu-icon" style="background:#DDEFE6;">🔤</div>
-      <div class="menu-text"><h2>Formar Palavras</h2><p>Monte palavras da equipe do bem</p></div>
+    <div class="mission-intro-wrap">
+      <div class="mission-intro-avatar" id="missionIntroAvatar"></div>
+      <h2 id="missionIntroTitle">MISSÃO</h2>
+      <p id="missionIntroMsg"></p>
+      <button class="start-btn small" id="missionIntroBtn">Começar</button>
     </div>
+  </section>
 
-    <div class="menu-card" onclick="goTo('final')">
-      <div class="menu-icon" style="background:#F6DDE8;">💛</div>
-      <div class="menu-text"><h2>Mensagem Final</h2><p>Descubra o poder de fazer o bem</p></div>
+  <!-- TELA PONTE: MISSÃO CUMPRIDA -->
+  <section class="screen" id="screen-mission-complete">
+    <div class="mission-complete-wrap">
+      <div class="mission-complete-star">⭐</div>
+      <div class="mission-complete-avatar" id="completeAvatar"></div>
+      <h2>MISSÃO CUMPRIDA!</h2>
+      <p id="completeMsg">Você ajudou o Guardião!</p>
+      <p class="stars-count" id="starsCount"></p>
+      <button class="start-btn small" onclick="goTo('missions')">Voltar às Missões</button>
     </div>
-
-    <footer>Feito com carinho para pequenos heróis · toque na tela para começar</footer>
   </section>
 
   <!-- COLORIR -->
   <section class="screen" id="screen-color">
     <div class="topbar">
-      <button class="back-btn" onclick="goTo('menu')">← Voltar</button>
+      <button class="back-btn" onclick="goTo('missions')">← Voltar</button>
       <button class="back-btn" onclick="resetColoring()">Limpar</button>
     </div>
     <div class="color-wrap">
@@ -309,13 +643,14 @@
       <div class="hero-counter" id="heroCounter"></div>
       <div class="palette" id="palette"></div>
       <p class="hint">Toque numa cor e depois numa parte do herói para pintar. Use as setinhas para trocar de herói.</p>
+      <button class="start-btn small" onclick="completeMission('pintura')">✓ Concluir Missão</button>
     </div>
   </section>
 
   <!-- PALAVRAS -->
   <section class="screen" id="screen-word">
     <div class="topbar">
-      <button class="back-btn" onclick="goTo('menu')">← Voltar</button>
+      <button class="back-btn" onclick="goTo('missions')">← Voltar</button>
       <div></div>
     </div>
     <div class="word-wrap">
@@ -328,15 +663,105 @@
     </div>
   </section>
 
+  <!-- MEMÓRIA -->
+  <section class="screen" id="screen-memory">
+    <div class="topbar">
+      <button class="back-btn" onclick="goTo('missions')">← Voltar</button>
+      <button class="back-btn" onclick="restartMemoryPhase()">Recomeçar fase</button>
+    </div>
+    <div class="memory-wrap">
+      <h2 id="memoryPhaseTitle">Fase 1</h2>
+      <p class="hint" id="memoryHint">Encontre todos os pares!</p>
+      <div class="memory-grid" id="memoryGrid"></div>
+      <div class="progress" id="memoryProgress"></div>
+      <button class="next-btn" id="memoryNextBtn" onclick="nextMemoryPhase()">Próxima fase →</button>
+    </div>
+  </section>
+
+  <!-- MONTAR -->
+  <section class="screen" id="screen-montar">
+    <div class="topbar">
+      <button class="back-btn" onclick="goTo('missions')">← Voltar</button>
+      <button class="back-btn" onclick="restartMontarLevel()">Recomeçar</button>
+    </div>
+    <div class="word-wrap">
+      <h2 id="montarTitle">Nível 1</h2>
+      <p class="hint" id="montarHint">Toque numa peça e depois no espaço da mesma cor!</p>
+      <div class="shape-tray" id="montarSlots"></div>
+      <div class="shape-tray" id="montarPieces"></div>
+      <div class="progress" id="montarProgress"></div>
+      <button class="next-btn" id="montarNextBtn" onclick="nextMontarLevel()">Próximo nível →</button>
+    </div>
+  </section>
+
+  <!-- DETETIVE -->
+  <section class="screen" id="screen-detetive">
+    <div class="topbar">
+      <button class="back-btn" onclick="goTo('missions')">← Voltar</button>
+      <div></div>
+    </div>
+    <div class="word-wrap">
+      <h2 id="detetiveQuestion">Onde está...?</h2>
+      <div class="detective-grid" id="detetiveGrid"></div>
+      <div class="progress" id="detetiveProgress"></div>
+      <button class="next-btn" id="detetiveNextBtn" onclick="nextDetetiveRound()">Próxima →</button>
+    </div>
+  </section>
+
+  <!-- CONTAGEM -->
+  <section class="screen" id="screen-contagem">
+    <div class="topbar">
+      <button class="back-btn" onclick="goTo('missions')">← Voltar</button>
+      <div></div>
+    </div>
+    <div class="word-wrap">
+      <h2 id="contagemPergunta">Quantos existem?</h2>
+      <div class="count-display" id="contagemDisplay"></div>
+      <div class="count-options" id="contagemOptions"></div>
+      <div class="progress" id="contagemProgress"></div>
+      <button class="next-btn" id="contagemNextBtn" onclick="nextContagemRound()">Próxima →</button>
+    </div>
+  </section>
+
+  <!-- LÓGICA -->
+  <section class="screen" id="screen-logica">
+    <div class="topbar">
+      <button class="back-btn" onclick="goTo('missions')">← Voltar</button>
+      <div></div>
+    </div>
+    <div class="word-wrap">
+      <h2>O que vem depois?</h2>
+      <div class="logic-sequence" id="logicaSequence"></div>
+      <div class="logic-options" id="logicaOptions"></div>
+      <div class="progress" id="logicaProgress"></div>
+      <button class="next-btn" id="logicaNextBtn" onclick="nextLogicaRound()">Próxima →</button>
+    </div>
+  </section>
+
+  <!-- PRECISÃO -->
+  <section class="screen" id="screen-precisao">
+    <div class="topbar">
+      <button class="back-btn" onclick="goTo('missions')">← Voltar</button>
+      <div></div>
+    </div>
+    <div class="word-wrap">
+      <h2 id="precisaoTitle">Estoure os balões!</h2>
+      <p class="hint" id="precisaoHint"></p>
+      <div class="balloon-grid" id="precisaoGrid"></div>
+      <div class="progress" id="precisaoProgress"></div>
+      <button class="next-btn" id="precisaoNextBtn" onclick="nextPrecisaoRound()">Próxima →</button>
+    </div>
+  </section>
+
   <!-- FINAL -->
   <section class="screen" id="screen-final">
     <div class="topbar">
-      <button class="back-btn" onclick="goTo('menu')">← Voltar</button>
+      <button class="back-btn" onclick="goTo('missions')">← Voltar</button>
       <div></div>
     </div>
     <div class="final-wrap">
       <div class="final-heroes" id="finalHeroes"></div>
-      <h2>Você é um Guardião do Bem! 🌎💛</h2>
+      <h2>Você é um Guardião do Bem! 🌎💎</h2>
       <p>E junto com seus amigos, você tem super poderes:</p>
       <p style="text-align:left; max-width:320px; margin:0 auto 14px;">
         🌟 Seja gentil<br>
@@ -345,7 +770,7 @@
         💬 Sempre diga a verdade
       </p>
       <p><strong>Transforme o mundo inteiro!</strong></p>
-      <button class="restart-btn" onclick="goTo('menu')">Voltar ao início</button>
+      <button class="restart-btn" onclick="goTo('missions')">Voltar às Missões</button>
       <p style="margin-top:26px; font-size:0.78rem; color:#A39C8E;">
         App desenvolvido por @chicatelier.br<br>como presente digital do aniversário de 5 anos de<br><strong>Aziz Padilha Seck</strong> 🎂
       </p>
@@ -361,6 +786,13 @@ function goTo(name){
   document.getElementById('screen-'+name).classList.add('active');
   if(name==='color' && !window._colorInit){ initColoring(); window._colorInit=true; }
   if(name==='word' && !window._wordInit){ initWordGame(); window._wordInit=true; }
+  if(name==='memory' && !window._memoryInit){ initMemory(); window._memoryInit=true; }
+  if(name==='missions'){ renderMissionGrid(); }
+  if(name==='montar' && !window._montarInit){ initMontar(); window._montarInit=true; }
+  if(name==='detetive' && !window._detetiveInit){ initDetetive(); window._detetiveInit=true; }
+  if(name==='contagem' && !window._contagemInit){ initContagem(); window._contagemInit=true; }
+  if(name==='logica' && !window._logicaInit){ initLogica(); window._logicaInit=true; }
+  if(name==='precisao' && !window._precisaoInit){ initPrecisao(); window._precisaoInit=true; }
   window.scrollTo(0,0);
 }
 
@@ -395,15 +827,438 @@ function renderDots(containerId, size, animated){
     return `<div class="${wrapClass}" style="${style}">${miniHeroSvg(c.hex, size)}</div>`;
   }).join('');
 }
-renderDots('teamRow', 44, true);
 renderDots('finalHeroes', 40, true);
+
+/* ---------- Registro dos 8 Guardiões / Missões ---------- */
+const missions = [
+  { id:'pintura',   nome:'Criatividade', cor:'#DB6BA0', acessorio:'🖌️', screen:'color',    existente:true,
+    mensagem:'Use sua imaginação e crie algo incrível!' },
+  { id:'memoria',   nome:'Memória',      cor:'#4A90C4', acessorio:'🃏', screen:'memory',   existente:true,
+    mensagem:'Você consegue encontrar todos os pares?' },
+  { id:'montar',    nome:'Montar',       cor:'#4FA97E', acessorio:'🧩', screen:'montar',   existente:true,
+    mensagem:'Ajude a encaixar todas as peças no lugar certo!' },
+  { id:'detetive',  nome:'Detetive',     cor:'#F5C542', acessorio:'🔎', screen:'detetive', existente:true,
+    mensagem:'Use os olhos de detetive e encontre o que se pede!' },
+  { id:'contagem',  nome:'Contagem',     cor:'#F0954A', acessorio:'🔢', screen:'contagem', existente:true,
+    mensagem:'Vamos contar juntos?' },
+  { id:'palavras',  nome:'Palavras',     cor:'#E15A4C', acessorio:'🔤', screen:'word',     existente:true,
+    mensagem:'Monte as palavras dos Guardiões do Bem!' },
+  { id:'logica',    nome:'Lógica',       cor:'#9B6FC9', acessorio:'🔷', screen:'logica',   existente:true,
+    mensagem:'O que vem depois? Descubra o padrão!' },
+  { id:'precisao',  nome:'Precisão',     cor:'#45BFB8', acessorio:'🎯', screen:'precisao', existente:true,
+    mensagem:'Vamos estourar os balões com cuidado!' }
+];
+
+function renderMissionGrid(){
+  const grid = document.getElementById('missionGrid');
+  grid.innerHTML = missions.map((m,i)=>{
+    const lockedClass = m.existente ? '' : 'locked';
+    const doneBadge = missionsCompleted.has(m.id) ? `<div class="mission-done">⭐</div>` : '';
+    return `<button class="mission-card ${lockedClass}" style="background:${m.cor}22;" onclick="openMission(${i})">
+      ${doneBadge}
+      <div class="mission-avatar">${miniHeroSvg(m.cor, 56)}<div class="mission-badge">${m.acessorio}</div></div>
+      <div class="mission-name">MISSÃO<br>${m.nome.toUpperCase()}</div>
+    </button>`;
+  }).join('');
+}
+
+function openMission(i){
+  const m = missions[i];
+  if(!m.existente){
+    showToast(`A Missão ${m.nome} está chegando em breve! ✨`);
+    return;
+  }
+  document.getElementById('missionIntroAvatar').innerHTML = miniHeroSvg(m.cor, 96);
+  document.getElementById('missionIntroTitle').textContent = `MISSÃO ${m.nome.toUpperCase()}`;
+  document.getElementById('missionIntroMsg').textContent = m.mensagem;
+  document.getElementById('missionIntroBtn').onclick = ()=> goTo(m.screen);
+  goTo('mission-intro');
+}
+
+let toastTimer = null;
+function showToast(text){
+  let toast = document.getElementById('appToast');
+  if(!toast){
+    toast = document.createElement('div');
+    toast.id = 'appToast';
+    toast.className = 'toast';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = text;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=> toast.classList.remove('show'), 2200);
+}
+
+/* ---------- MONTAR (5 níveis: 3, 4, 6, 8, 10 peças) ---------- */
+const montarColorPool = ['#E15A4C','#4A90C4','#4A4540','#DB6BA0','#4FA97E','#F5C542','#9B6FC9','#F0954A','#45BFB8','#7EC8E3'];
+const montarLevelSizes = [3,4,6,8,10];
+let montarLevelIndex = 0;
+let montarSlots = [];
+let montarPieces = [];
+let montarSelected = null;
+
+function loadMontarLevel(){
+  const size = montarLevelSizes[montarLevelIndex];
+  const colors = montarColorPool.slice(0, size);
+  montarSlots = colors.map(c=>({color:c, filled:false}));
+  montarPieces = shuffle(colors).map(c=>({color:c, placed:false}));
+  montarSelected = null;
+  document.getElementById('montarTitle').textContent = `Nível ${montarLevelIndex+1} de ${montarLevelSizes.length}`;
+  document.getElementById('montarProgress').textContent = '';
+  document.getElementById('montarNextBtn').classList.remove('show');
+  renderMontar();
+}
+
+function renderMontar(){
+  document.getElementById('montarSlots').innerHTML = montarSlots.map((s,i)=>
+    `<button class="shape-slot ${s.filled?'filled':''}" id="mslot-${i}" style="${s.filled? `background:${s.color}; border-color:${s.color};` : `border-color:${s.color}88;`}" onclick="tapMontarSlot(${i})"></button>`
+  ).join('');
+  document.getElementById('montarPieces').innerHTML = montarPieces.map((p,j)=>
+    `<button class="shape-piece ${p.placed?'placed':''}" id="mpiece-${j}" style="background:${p.color};" onclick="tapMontarPiece(${j})"></button>`
+  ).join('');
+}
+
+function tapMontarPiece(j){
+  if(montarPieces[j].placed) return;
+  montarSelected = j;
+  document.querySelectorAll('.shape-piece').forEach(el=>el.classList.remove('selected'));
+  document.getElementById(`mpiece-${j}`).classList.add('selected');
+}
+
+function tapMontarSlot(i){
+  if(montarSelected===null || montarSlots[i].filled) return;
+  const piece = montarPieces[montarSelected];
+  if(piece.color === montarSlots[i].color){
+    montarSlots[i].filled = true;
+    piece.placed = true;
+    montarSelected = null;
+    renderMontar();
+    checkMontarWin();
+  } else {
+    const slotEl = document.getElementById(`mslot-${i}`);
+    slotEl.classList.add('shake');
+    setTimeout(()=> slotEl.classList.remove('shake'), 300);
+  }
+}
+
+function checkMontarWin(){
+  if(montarSlots.every(s=>s.filled)){
+    const isLast = montarLevelIndex === montarLevelSizes.length - 1;
+    document.getElementById('montarProgress').textContent = 'Nível completo! 🎉';
+    const btn = document.getElementById('montarNextBtn');
+    btn.textContent = isLast ? 'Concluir Missão ⭐' : 'Próximo nível →';
+    btn.onclick = isLast ? ()=>completeMission('montar') : nextMontarLevel;
+    btn.classList.add('show');
+  }
+}
+function nextMontarLevel(){ montarLevelIndex++; loadMontarLevel(); }
+function restartMontarLevel(){ loadMontarLevel(); }
+function initMontar(){ montarLevelIndex = 0; loadMontarLevel(); }
+
+/* ---------- DETETIVE (5 rodadas) ---------- */
+const detetiveRounds = [
+  { question:'Onde está o gatinho?', correct:'🐱', options:['🐱','🐶','🐰'] },
+  { question:'Encontre a bola vermelha.', correct:'🔴', options:['🔴','🔵','🟢','🟡'] },
+  { question:'Onde está o sol?', correct:'☀️', options:['☀️','🌙','⭐','☁️'] },
+  { question:'Encontre o animal que voa.', correct:'🐦', options:['🐦','🐢','🐟','🐱','🐰'] },
+  { question:'Encontre a fruta amarela.', correct:'🍌', options:['🍌','🍎','🍇','🍓','🍊'] }
+];
+let detetiveIndex = 0;
+
+function loadDetetiveRound(){
+  const round = detetiveRounds[detetiveIndex];
+  document.getElementById('detetiveQuestion').textContent = round.question;
+  document.getElementById('detetiveProgress').textContent = `Rodada ${detetiveIndex+1} de ${detetiveRounds.length}`;
+  document.getElementById('detetiveNextBtn').classList.remove('show');
+  const shuffled = shuffle(round.options);
+  document.getElementById('detetiveGrid').innerHTML = shuffled.map((opt,i)=>
+    `<button class="detective-item" id="ditem-${i}" data-val="${opt}" onclick="tapDetetive(${i})">${opt}</button>`
+  ).join('');
+}
+function tapDetetive(i){
+  const round = detetiveRounds[detetiveIndex];
+  const btn = document.getElementById(`ditem-${i}`);
+  if(btn.dataset.val === round.correct){
+    document.querySelectorAll('.detective-item').forEach(el=>el.onclick=null);
+    btn.classList.add('correct');
+    document.getElementById('detetiveProgress').textContent = 'Muito bem! 🎉';
+    const isLast = detetiveIndex === detetiveRounds.length - 1;
+    const nb = document.getElementById('detetiveNextBtn');
+    nb.textContent = isLast ? 'Concluir Missão ⭐' : 'Próxima →';
+    nb.onclick = isLast ? ()=>completeMission('detetive') : nextDetetiveRound;
+    nb.classList.add('show');
+  } else {
+    btn.classList.add('shake');
+    document.getElementById('detetiveProgress').textContent = 'Quase! Tente de novo.';
+    setTimeout(()=>btn.classList.remove('shake'), 300);
+  }
+}
+function nextDetetiveRound(){ detetiveIndex++; loadDetetiveRound(); }
+function initDetetive(){ detetiveIndex = 0; loadDetetiveRound(); }
+
+/* ---------- CONTAGEM (5 rodadas) ---------- */
+const contagemRounds = [
+  { type:'count', emoji:'🍎', count:2 },
+  { type:'count', emoji:'🍎', count:3 },
+  { type:'count', emoji:'🎈', count:4 },
+  { type:'count', emoji:'⭐', count:5 },
+  { type:'compare', emoji:'🍇', left:3, right:5 }
+];
+let contagemIndex = 0;
+
+function numericOptions(correct){
+  const set = new Set([correct]);
+  while(set.size < 3){
+    const candidate = correct + (Math.floor(Math.random()*5) - 2);
+    if(candidate >= 1 && candidate <= 9) set.add(candidate);
+  }
+  return shuffle([...set]);
+}
+function loadContagemRound(){
+  const round = contagemRounds[contagemIndex];
+  document.getElementById('contagemProgress').textContent = `Rodada ${contagemIndex+1} de ${contagemRounds.length}`;
+  document.getElementById('contagemNextBtn').classList.remove('show');
+  if(round.type==='count'){
+    document.getElementById('contagemPergunta').textContent = `Quantos ${round.emoji} existem?`;
+    document.getElementById('contagemDisplay').innerHTML = round.emoji.repeat(round.count).split('').join(' ');
+    const opts = numericOptions(round.count);
+    document.getElementById('contagemOptions').innerHTML = opts.map(n=>
+      `<button class="count-option" onclick="tapContagem(${n})">${n}</button>`
+    ).join('');
+  } else {
+    document.getElementById('contagemPergunta').textContent = 'Qual grupo tem mais?';
+    document.getElementById('contagemDisplay').innerHTML =
+      `<span class="detective-item" style="display:inline-flex; width:auto; padding:10px 14px; margin-right:10px;">${round.emoji.repeat(round.left)}</span>` +
+      `<span class="detective-item" style="display:inline-flex; width:auto; padding:10px 14px;">${round.emoji.repeat(round.right)}</span>`;
+    document.getElementById('contagemOptions').innerHTML = `
+      <button class="count-option" style="width:auto; padding:0 18px;" onclick="tapContagemCompare('left')">⬅️ Esquerda</button>
+      <button class="count-option" style="width:auto; padding:0 18px;" onclick="tapContagemCompare('right')">➡️ Direita</button>`;
+  }
+}
+function contagemSuccess(){
+  document.getElementById('contagemProgress').textContent = 'Muito bem! 🎉';
+  const isLast = contagemIndex === contagemRounds.length - 1;
+  const nb = document.getElementById('contagemNextBtn');
+  nb.textContent = isLast ? 'Concluir Missão ⭐' : 'Próxima →';
+  nb.onclick = isLast ? ()=>completeMission('contagem') : nextContagemRound;
+  nb.classList.add('show');
+  document.querySelectorAll('#contagemOptions button').forEach(b=>b.onclick=null);
+}
+function tapContagem(n){
+  const round = contagemRounds[contagemIndex];
+  if(n === round.count){ contagemSuccess(); }
+  else { document.getElementById('contagemProgress').textContent = 'Quase! Tente de novo.'; }
+}
+function tapContagemCompare(side){
+  const round = contagemRounds[contagemIndex];
+  const correctSide = round.right > round.left ? 'right' : 'left';
+  if(side === correctSide){ contagemSuccess(); }
+  else { document.getElementById('contagemProgress').textContent = 'Quase! Tente de novo.'; }
+}
+function nextContagemRound(){ contagemIndex++; loadContagemRound(); }
+function initContagem(){ contagemIndex = 0; loadContagemRound(); }
+
+/* ---------- LÓGICA (5 rodadas) ---------- */
+const logicaRounds = [
+  { sequence:['🔴','🔵','🔴','🔵'], correct:'🔴', options:['🔴','🔵','🟢'] },
+  { sequence:['🟡','🟡','🔵','🟡','🟡','🔵'], correct:'🟡', options:['🟡','🔵','🟢'] },
+  { sequence:['⭐','🌙','⭐','🌙','⭐'], correct:'🌙', options:['🌙','⭐','☀️'] },
+  { sequence:['🔺','🔺','🔵','🔺','🔺','🔵','🔺','🔺'], correct:'🔵', options:['🔵','🔺','🟢'] },
+  { sequence:['🍎','🍌','🍇','🍎','🍌','🍇','🍎','🍌'], correct:'🍇', options:['🍇','🍎','🍌'] }
+];
+let logicaIndex = 0;
+
+function loadLogicaRound(){
+  const round = logicaRounds[logicaIndex];
+  document.getElementById('logicaSequence').textContent = round.sequence.join(' ') + ' ❓';
+  document.getElementById('logicaProgress').textContent = `Rodada ${logicaIndex+1} de ${logicaRounds.length}`;
+  document.getElementById('logicaNextBtn').classList.remove('show');
+  const shuffled = shuffle(round.options);
+  document.getElementById('logicaOptions').innerHTML = shuffled.map((opt,i)=>
+    `<button class="logic-option" id="lopt-${i}" data-val="${opt}" onclick="tapLogica(${i})">${opt}</button>`
+  ).join('');
+}
+function tapLogica(i){
+  const round = logicaRounds[logicaIndex];
+  const btn = document.getElementById(`lopt-${i}`);
+  if(btn.dataset.val === round.correct){
+    document.querySelectorAll('.logic-option').forEach(el=>el.onclick=null);
+    document.getElementById('logicaProgress').textContent = 'Muito bem! 🎉';
+    const isLast = logicaIndex === logicaRounds.length - 1;
+    const nb = document.getElementById('logicaNextBtn');
+    nb.textContent = isLast ? 'Concluir Missão ⭐' : 'Próxima →';
+    nb.onclick = isLast ? ()=>completeMission('logica') : nextLogicaRound;
+    nb.classList.add('show');
+  } else {
+    btn.classList.add('shake');
+    document.getElementById('logicaProgress').textContent = 'Quase! Tente de novo.';
+    setTimeout(()=>btn.classList.remove('shake'), 300);
+  }
+}
+function nextLogicaRound(){ logicaIndex++; loadLogicaRound(); }
+function initLogica(){ logicaIndex = 0; loadLogicaRound(); }
+
+/* ---------- PRECISÃO (3 rodadas, sem cronômetro) ---------- */
+const precisaoRounds = [
+  { instrucao:'Estoure todos os balões!', targetColor:null, total:6,
+    colors:['#E15A4C','#4A90C4','#4FA97E','#F5C542','#DB6BA0','#9B6FC9'] },
+  { instrucao:'Estoure somente os balões azuis!', targetColor:'#4A90C4', total:8,
+    colors:['#4A90C4','#E15A4C','#4A90C4','#F5C542','#4A90C4','#DB6BA0','#4A90C4','#4FA97E'] },
+  { instrucao:'Estoure somente os balões vermelhos!', targetColor:'#E15A4C', total:10,
+    colors:['#E15A4C','#4A90C4','#E15A4C','#F5C542','#E15A4C','#DB6BA0','#E15A4C','#4FA97E','#E15A4C','#9B6FC9'] }
+];
+let precisaoIndex = 0;
+let precisaoBalloons = [];
+let precisaoPoppedTarget = 0;
+
+function loadPrecisaoRound(){
+  const round = precisaoRounds[precisaoIndex];
+  precisaoBalloons = shuffle(round.colors).map(c=>({color:c, popped:false}));
+  precisaoPoppedTarget = 0;
+  document.getElementById('precisaoTitle').textContent = `Rodada ${precisaoIndex+1} de ${precisaoRounds.length}`;
+  document.getElementById('precisaoHint').textContent = round.instrucao;
+  document.getElementById('precisaoProgress').textContent = '';
+  document.getElementById('precisaoNextBtn').classList.remove('show');
+  renderPrecisao();
+}
+function renderPrecisao(){
+  document.getElementById('precisaoGrid').innerHTML = precisaoBalloons.map((b,i)=>
+    `<button class="balloon ${b.popped?'popped':''}" id="balloon-${i}" style="background:${b.color};" onclick="tapBalloon(${i})"></button>`
+  ).join('');
+}
+function tapBalloon(i){
+  const round = precisaoRounds[precisaoIndex];
+  const b = precisaoBalloons[i];
+  if(b.popped) return;
+  const isTarget = round.targetColor===null || b.color===round.targetColor;
+  if(isTarget){
+    b.popped = true;
+    precisaoPoppedTarget++;
+    renderPrecisao();
+    const targetTotal = round.targetColor===null ? round.total : round.colors.filter(c=>c===round.targetColor).length;
+    if(precisaoPoppedTarget >= targetTotal){
+      document.getElementById('precisaoProgress').textContent = 'Muito bem! 🎉';
+      const isLast = precisaoIndex === precisaoRounds.length - 1;
+      const nb = document.getElementById('precisaoNextBtn');
+      nb.textContent = isLast ? 'Concluir Missão ⭐' : 'Próxima →';
+      nb.onclick = isLast ? ()=>completeMission('precisao') : nextPrecisaoRound;
+      nb.classList.add('show');
+    }
+  } else {
+    const el = document.getElementById(`balloon-${i}`);
+    el.style.transform = 'scale(0.9)';
+    setTimeout(()=>{ el.style.transform=''; }, 150);
+  }
+}
+function nextPrecisaoRound(){ precisaoIndex++; loadPrecisaoRound(); }
+function initPrecisao(){ precisaoIndex = 0; loadPrecisaoRound(); }
+
+/* ---------- Conclusão de missão (Fase 2) ---------- */
+const missionsCompleted = new Set();
+let totalStars = 0;
+
+function completeMission(missionId){
+  const m = missions.find(x=>x.id===missionId);
+  if(!m) return;
+  if(!missionsCompleted.has(missionId)){
+    missionsCompleted.add(missionId);
+    totalStars++;
+  }
+  document.getElementById('completeAvatar').innerHTML = miniHeroSvg(m.cor, 88);
+  document.getElementById('completeMsg').textContent = `Você ajudou o Guardião da Missão ${m.nome}!`;
+  document.getElementById('starsCount').textContent = `⭐ Estrelas conquistadas: ${totalStars}`;
+  goTo('mission-complete');
+}
+
+function bigHeroBanner(){
+  return `<svg viewBox="0 0 220 320" xmlns="http://www.w3.org/2000/svg">
+    <rect x="30" y="150" width="30" height="90" rx="14" fill="#E15A4C" stroke="#333" stroke-width="4"/>
+    <rect x="160" y="150" width="30" height="90" rx="14" fill="#E15A4C" stroke="#333" stroke-width="4"/>
+    <rect x="60" y="140" width="100" height="120" rx="24" fill="#E15A4C" stroke="#333" stroke-width="4"/>
+    <rect x="70" y="215" width="80" height="22" rx="6" fill="#CFCFCF" stroke="#333" stroke-width="4"/>
+    <circle cx="110" cy="226" r="10" fill="#F5C542" stroke="#333" stroke-width="3"/>
+    <polygon points="110,155 118,172 137,172 122,183 128,201 110,190 92,201 98,183 83,172 102,172" fill="#F5C542" stroke="#333" stroke-width="3"/>
+    <rect x="65" y="258" width="34" height="30" rx="8" fill="#E15A4C" stroke="#333" stroke-width="4"/>
+    <rect x="121" y="258" width="34" height="30" rx="8" fill="#E15A4C" stroke="#333" stroke-width="4"/>
+    <!-- pescoço -->
+    <rect x="97" y="126" width="26" height="20" rx="6" fill="#8D5A3C" stroke="#333" stroke-width="3"/>
+    <!-- rosto -->
+    <circle cx="110" cy="88" r="48" fill="#8D5A3C" stroke="#333" stroke-width="4"/>
+    <path d="M64 80 Q60 38 110 33 Q160 38 156 80 Q149 54 110 50 Q71 54 64 80 Z" fill="#241812" stroke="#333" stroke-width="3"/>
+    <circle cx="76" cy="50" r="7" fill="#241812" stroke="#333" stroke-width="1.5"/>
+    <circle cx="93" cy="41" r="7" fill="#241812" stroke="#333" stroke-width="1.5"/>
+    <circle cx="110" cy="37" r="7" fill="#241812" stroke="#333" stroke-width="1.5"/>
+    <circle cx="127" cy="41" r="7" fill="#241812" stroke="#333" stroke-width="1.5"/>
+    <circle cx="144" cy="50" r="7" fill="#241812" stroke="#333" stroke-width="1.5"/>
+    <circle cx="94" cy="90" r="5.5" fill="#241812"/>
+    <circle cx="126" cy="90" r="5.5" fill="#241812"/>
+    <path d="M94 108 Q110 118 126 108" stroke="#241812" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+    <!-- capacete na mão direita -->
+    <g transform="translate(146,192) rotate(12 34 28)">
+      <ellipse cx="34" cy="28" rx="32" ry="28" fill="#E15A4C" stroke="#333" stroke-width="4"/>
+      <path d="M6 24 Q34 7 62 24 Q53 44 34 46 Q15 44 6 24 Z" fill="#4A4540" stroke="#333" stroke-width="3"/>
+      <polygon points="16,4 34,-12 50,4 34,10" fill="#CFCFCF" stroke="#333" stroke-width="2"/>
+    </g>
+  </svg>`;
+}
+
+function renderMenuBanner(){
+  const el = document.getElementById('menuBanner');
+  if(!el) return;
+  const scene = `<svg viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#6EC1F0"/>
+        <stop offset="100%" stop-color="#DFF3FB"/>
+      </linearGradient>
+    </defs>
+    <rect x="0" y="0" width="400" height="220" fill="url(#skyGrad)"/>
+    <circle cx="336" cy="42" r="26" fill="#FDE16A" stroke="#F0B93E" stroke-width="3"/>
+    <g fill="#FFFFFF" opacity="0.95">
+      <ellipse cx="58" cy="46" rx="30" ry="14"/>
+      <ellipse cx="84" cy="38" rx="22" ry="12"/>
+      <ellipse cx="36" cy="40" rx="18" ry="10"/>
+      <ellipse cx="232" cy="32" rx="26" ry="12"/>
+      <ellipse cx="256" cy="26" rx="18" ry="10"/>
+    </g>
+    <g stroke="#4A4540" stroke-width="3" fill="none" stroke-linecap="round">
+      <path d="M118 68 Q126 58 134 68 Q142 58 150 68"/>
+      <path d="M296 88 Q302 80 308 88 Q314 80 320 88"/>
+      <path d="M168 52 Q173 46 178 52 Q183 46 188 52"/>
+    </g>
+    <polygon points="0,172 66,86 132,172" fill="#A9BEDD"/>
+    <polygon points="86,172 156,66 236,172" fill="#93AAD1"/>
+    <polygon points="206,172 276,96 346,172" fill="#A9BEDD"/>
+    <polygon points="296,172 356,104 400,172" fill="#93AAD1"/>
+    <path d="M0 178 Q40 162 80 178 Q120 194 160 178 Q200 162 240 178 Q280 194 320 178 Q360 162 400 178 L400 220 L0 220 Z"
+      fill="#7FBE6A" stroke="#3F7A34" stroke-width="3"/>
+    <g stroke="#3F7A34" stroke-width="2.5" stroke-linecap="round">
+      <path d="M30 182 l-4 -11"/><path d="M38 183 l1 -12"/><path d="M46 182 l4 -10"/>
+      <path d="M150 188 l-4 -11"/><path d="M158 189 l1 -12"/><path d="M166 188 l4 -10"/>
+      <path d="M250 187 l-4 -11"/><path d="M258 188 l1 -12"/><path d="M266 187 l4 -10"/>
+      <path d="M340 182 l-4 -11"/><path d="M348 183 l1 -12"/><path d="M356 182 l4 -10"/>
+    </g>
+  </svg>`;
+  el.innerHTML = `
+    <div class="banner-scene">${scene}</div>
+    <div class="banner-heroes">
+      <div class="side-hero jumper" style="animation-delay:0s;">${miniHeroSvg(teamColors[2].hex, 52)}</div>
+      <div class="side-hero jumper" style="animation-delay:0.5s;">${miniHeroSvg(teamColors[1].hex, 52)}</div>
+      <div class="big-hero jumper" style="animation-delay:1s;">${bigHeroBanner()}</div>
+      <div class="side-hero jumper" style="animation-delay:1.5s;">${miniHeroSvg(teamColors[3].hex, 52)}</div>
+      <div class="side-hero jumper" style="animation-delay:2s;">${miniHeroSvg(teamColors[4].hex, 52)}</div>
+    </div>
+  `;
+}
+renderMenuBanner();
 
 /* ---------- Atividade: Colorir ---------- */
 const heroTemplates = [
   { label:'Herói em pé',
     fills:{'p-corpo':'#EDEDED','p-cinto':'#CFCFCF','p-braco-e':'#EDEDED','p-braco-d':'#EDEDED',
       'p-estrela':'#F5C542','p-capacete':'#EDEDED','p-viseira':'#DADADA','p-crista':'#CFCFCF',
-      'p-bota-e':'#EDEDED','p-bota-d':'#EDEDED'},
+      'p-bota-e':'#EDEDED','p-bota-d':'#EDEDED','p-diamante':'#7EC8E3'},
     svg:`<svg viewBox="0 0 220 320" xmlns="http://www.w3.org/2000/svg">
       <rect id="p-corpo" x="60" y="140" width="100" height="120" rx="24" fill="#EDEDED" stroke="#333" stroke-width="4"/>
       <rect id="p-cinto" x="70" y="215" width="80" height="22" rx="6" fill="#CFCFCF" stroke="#333" stroke-width="4"/>
@@ -416,12 +1271,17 @@ const heroTemplates = [
       <polygon id="p-crista" points="95,38 110,10 125,38 110,50" fill="#CFCFCF" stroke="#333" stroke-width="3"/>
       <rect id="p-bota-e" x="65" y="258" width="34" height="30" rx="8" fill="#EDEDED" stroke="#333" stroke-width="4"/>
       <rect id="p-bota-d" x="121" y="258" width="34" height="30" rx="8" fill="#EDEDED" stroke="#333" stroke-width="4"/>
+      <g id="p-diamante" fill="#7EC8E3" transform="translate(175,248)">
+        <polygon points="0,-13 11,-2 0,15 -11,-2" stroke="#333" stroke-width="3"/>
+        <line x1="0" y1="-13" x2="0" y2="15" stroke="#333" stroke-width="1.5"/>
+        <line x1="-11" y1="-2" x2="11" y2="-2" stroke="#333" stroke-width="1.5"/>
+      </g>
     </svg>` },
 
   { label:'Herói comemorando',
     fills:{'p-corpo':'#EDEDED','p-cinto':'#CFCFCF','p-braco-e':'#EDEDED','p-braco-d':'#EDEDED',
       'p-estrela':'#F5C542','p-capacete':'#EDEDED','p-viseira':'#DADADA','p-crista':'#CFCFCF',
-      'p-bota-e':'#EDEDED','p-bota-d':'#EDEDED'},
+      'p-bota-e':'#EDEDED','p-bota-d':'#EDEDED','p-diamante':'#7EC8E3'},
     svg:`<svg viewBox="0 0 220 320" xmlns="http://www.w3.org/2000/svg">
       <rect id="p-corpo" x="60" y="150" width="100" height="115" rx="24" fill="#EDEDED" stroke="#333" stroke-width="4"/>
       <rect id="p-cinto" x="70" y="220" width="80" height="22" rx="6" fill="#CFCFCF" stroke="#333" stroke-width="4"/>
@@ -434,12 +1294,17 @@ const heroTemplates = [
       <polygon id="p-crista" points="96,45 110,18 124,45 110,56" fill="#CFCFCF" stroke="#333" stroke-width="3"/>
       <rect id="p-bota-e" x="68" y="258" width="32" height="30" rx="8" fill="#EDEDED" stroke="#333" stroke-width="4" transform="rotate(-8 84 273)"/>
       <rect id="p-bota-d" x="120" y="258" width="32" height="30" rx="8" fill="#EDEDED" stroke="#333" stroke-width="4" transform="rotate(8 136 273)"/>
+      <g id="p-diamante" fill="#7EC8E3" transform="rotate(165 176 160) translate(176,251)">
+        <polygon points="0,-13 11,-2 0,15 -11,-2" stroke="#333" stroke-width="3"/>
+        <line x1="0" y1="-13" x2="0" y2="15" stroke="#333" stroke-width="1.5"/>
+        <line x1="-11" y1="-2" x2="11" y2="-2" stroke="#333" stroke-width="1.5"/>
+      </g>
     </svg>` },
 
   { label:'Herói pronto pra ação',
     fills:{'p-corpo':'#EDEDED','p-cinto':'#CFCFCF','p-braco-e':'#EDEDED','p-braco-d':'#EDEDED',
       'p-estrela':'#F5C542','p-capacete':'#EDEDED','p-viseira':'#DADADA','p-crista':'#CFCFCF',
-      'p-bota-e':'#EDEDED','p-bota-d':'#EDEDED'},
+      'p-bota-e':'#EDEDED','p-bota-d':'#EDEDED','p-diamante':'#7EC8E3'},
     svg:`<svg viewBox="0 0 220 320" xmlns="http://www.w3.org/2000/svg">
       <rect id="p-corpo" x="60" y="145" width="100" height="110" rx="22" fill="#EDEDED" stroke="#333" stroke-width="4"/>
       <rect id="p-cinto" x="70" y="215" width="80" height="22" rx="6" fill="#CFCFCF" stroke="#333" stroke-width="4"/>
@@ -452,12 +1317,17 @@ const heroTemplates = [
       <polygon id="p-crista" points="95,38 110,10 125,38 110,50" fill="#CFCFCF" stroke="#333" stroke-width="3"/>
       <rect id="p-bota-e" x="40" y="252" width="34" height="32" rx="8" fill="#EDEDED" stroke="#333" stroke-width="4" transform="rotate(-18 57 268)"/>
       <rect id="p-bota-d" x="146" y="252" width="34" height="32" rx="8" fill="#EDEDED" stroke="#333" stroke-width="4" transform="rotate(18 163 268)"/>
+      <g id="p-diamante" fill="#7EC8E3" transform="rotate(55 182 150) translate(182,227)">
+        <polygon points="0,-13 11,-2 0,15 -11,-2" stroke="#333" stroke-width="3"/>
+        <line x1="0" y1="-13" x2="0" y2="15" stroke="#333" stroke-width="1.5"/>
+        <line x1="-11" y1="-2" x2="11" y2="-2" stroke="#333" stroke-width="1.5"/>
+      </g>
     </svg>` },
 
   { label:'Herói voador',
     fills:{'p-corpo':'#EDEDED','p-capa':'#E15A4C','p-braco-e':'#EDEDED','p-braco-d':'#EDEDED',
       'p-estrela':'#F5C542','p-capacete':'#EDEDED','p-viseira':'#DADADA','p-crista':'#CFCFCF',
-      'p-bota-e':'#EDEDED','p-bota-d':'#EDEDED'},
+      'p-bota-e':'#EDEDED','p-bota-d':'#EDEDED','p-diamante':'#7EC8E3'},
     svg:`<svg viewBox="0 0 220 320" xmlns="http://www.w3.org/2000/svg">
       <polygon id="p-capa" points="70,150 30,270 110,235 190,270 150,150" fill="#E15A4C" stroke="#333" stroke-width="4"/>
       <rect id="p-corpo" x="63" y="145" width="94" height="105" rx="22" fill="#EDEDED" stroke="#333" stroke-width="4"/>
@@ -469,12 +1339,17 @@ const heroTemplates = [
       <polygon id="p-crista" points="96,42 110,15 124,42 110,53" fill="#CFCFCF" stroke="#333" stroke-width="3"/>
       <rect id="p-bota-e" x="88" y="248" width="20" height="34" rx="8" fill="#EDEDED" stroke="#333" stroke-width="4" transform="rotate(12 98 265)"/>
       <rect id="p-bota-d" x="112" y="248" width="20" height="34" rx="8" fill="#EDEDED" stroke="#333" stroke-width="4" transform="rotate(-12 122 265)"/>
+      <g id="p-diamante" fill="#7EC8E3" transform="rotate(-100 178 150) translate(178,237)">
+        <polygon points="0,-13 11,-2 0,15 -11,-2" stroke="#333" stroke-width="3"/>
+        <line x1="0" y1="-13" x2="0" y2="15" stroke="#333" stroke-width="1.5"/>
+        <line x1="-11" y1="-2" x2="11" y2="-2" stroke="#333" stroke-width="1.5"/>
+      </g>
     </svg>` },
 
   { label:'Herói acenando',
     fills:{'p-corpo':'#EDEDED','p-cinto':'#CFCFCF','p-braco-e':'#EDEDED','p-braco-d':'#EDEDED',
       'p-estrela':'#F5C542','p-capacete':'#EDEDED','p-viseira':'#DADADA','p-crista':'#CFCFCF',
-      'p-bota-e':'#EDEDED','p-bota-d':'#EDEDED'},
+      'p-bota-e':'#EDEDED','p-bota-d':'#EDEDED','p-diamante':'#7EC8E3'},
     svg:`<svg viewBox="0 0 220 320" xmlns="http://www.w3.org/2000/svg">
       <rect id="p-corpo" x="60" y="140" width="100" height="120" rx="24" fill="#EDEDED" stroke="#333" stroke-width="4"/>
       <rect id="p-cinto" x="70" y="215" width="80" height="22" rx="6" fill="#CFCFCF" stroke="#333" stroke-width="4"/>
@@ -487,12 +1362,17 @@ const heroTemplates = [
       <polygon id="p-crista" points="90,38 105,10 120,38 105,50" fill="#CFCFCF" stroke="#333" stroke-width="3" transform="rotate(-6 105 90)"/>
       <rect id="p-bota-e" x="65" y="258" width="34" height="30" rx="8" fill="#EDEDED" stroke="#333" stroke-width="4"/>
       <rect id="p-bota-d" x="121" y="258" width="34" height="30" rx="8" fill="#EDEDED" stroke="#333" stroke-width="4"/>
+      <g id="p-diamante" fill="#7EC8E3" transform="rotate(178 173 150) translate(173,241)">
+        <polygon points="0,-13 11,-2 0,15 -11,-2" stroke="#333" stroke-width="3"/>
+        <line x1="0" y1="-13" x2="0" y2="15" stroke="#333" stroke-width="1.5"/>
+        <line x1="-11" y1="-2" x2="11" y2="-2" stroke="#333" stroke-width="1.5"/>
+      </g>
     </svg>` },
 
   { label:'Robô amigo',
     fills:{'p-corpo':'#EDEDED','p-cabeca':'#EDEDED','p-visor':'#4A4540','p-antena':'#F5C542',
       'p-luz':'#F5C542','p-braco-e':'#EDEDED','p-braco-d':'#EDEDED','p-perna-e':'#CFCFCF',
-      'p-perna-d':'#CFCFCF','p-pe-e':'#CFCFCF','p-pe-d':'#CFCFCF'},
+      'p-perna-d':'#CFCFCF','p-pe-e':'#CFCFCF','p-pe-d':'#CFCFCF','p-diamante':'#7EC8E3'},
     svg:`<svg viewBox="0 0 220 320" xmlns="http://www.w3.org/2000/svg">
       <g id="p-antena" fill="#F5C542">
         <rect x="104" y="28" width="12" height="20" rx="3" stroke="#333" stroke-width="3"/>
@@ -509,15 +1389,26 @@ const heroTemplates = [
       <rect id="p-perna-d" x="118" y="214" width="26" height="48" rx="8" fill="#CFCFCF" stroke="#333" stroke-width="4"/>
       <rect id="p-pe-e" x="66" y="260" width="42" height="20" rx="6" fill="#CFCFCF" stroke="#333" stroke-width="4"/>
       <rect id="p-pe-d" x="112" y="260" width="42" height="20" rx="6" fill="#CFCFCF" stroke="#333" stroke-width="4"/>
+      <g id="p-diamante" fill="#7EC8E3" transform="translate(183,207)">
+        <polygon points="0,-13 11,-2 0,15 -11,-2" stroke="#333" stroke-width="3"/>
+        <line x1="0" y1="-13" x2="0" y2="15" stroke="#333" stroke-width="1.5"/>
+        <line x1="-11" y1="-2" x2="11" y2="-2" stroke="#333" stroke-width="1.5"/>
+      </g>
     </svg>` }
 ];
 
 let selectedColor = teamColors[0].hex;
 const totalHeroes = heroTemplates.length;
+const totalPages = heroTemplates.length + 1; // última página = desenho livre
 let currentHeroIndex = 0;
 let heroFills = heroTemplates.map(t => ({...t.fills}));
+let freeDrawDataURL = null;
 
 function renderHero(){
+  if(currentHeroIndex === heroTemplates.length){
+    renderFreeDraw();
+    return;
+  }
   const template = heroTemplates[currentHeroIndex];
   document.getElementById('heroSvgHolder').innerHTML = template.svg;
   const svg = document.querySelector('#heroSvgHolder svg');
@@ -530,7 +1421,53 @@ function renderHero(){
       state[part.id] = selectedColor;
     });
   });
-  document.getElementById('heroCounter').textContent = `${template.label} — ${currentHeroIndex+1} de ${totalHeroes}`;
+  document.getElementById('heroCounter').textContent = `${template.label} — ${currentHeroIndex+1} de ${totalPages}`;
+}
+
+function renderFreeDraw(){
+  const holder = document.getElementById('heroSvgHolder');
+  holder.innerHTML = '<canvas id="freeDrawCanvas" width="220" height="300" style="background:#FFFFFF; border-radius:16px; border:3px solid #333; touch-action:none; width:220px; height:300px;"></canvas>';
+  const canvas = document.getElementById('freeDrawCanvas');
+  const ctx = canvas.getContext('2d');
+  let drawing = false;
+
+  function pos(e){
+    const rect = canvas.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    return { x: (clientX - rect.left) * (canvas.width / rect.width), y: (clientY - rect.top) * (canvas.height / rect.height) };
+  }
+  function start(e){
+    drawing = true;
+    const p = pos(e);
+    ctx.beginPath();
+    ctx.moveTo(p.x, p.y);
+  }
+  function move(e){
+    if(!drawing) return;
+    const p = pos(e);
+    ctx.lineWidth = 10;
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = selectedColor;
+    ctx.lineTo(p.x, p.y);
+    ctx.stroke();
+  }
+  function end(){
+    if(!drawing) return;
+    drawing = false;
+    freeDrawDataURL = canvas.toDataURL();
+  }
+  canvas.addEventListener('pointerdown', start);
+  canvas.addEventListener('pointermove', move);
+  canvas.addEventListener('pointerup', end);
+  canvas.addEventListener('pointerleave', end);
+
+  if(freeDrawDataURL){
+    const img = new Image();
+    img.onload = ()=> ctx.drawImage(img, 0, 0);
+    img.src = freeDrawDataURL;
+  }
+  document.getElementById('heroCounter').textContent = `Desenho Livre — ${totalPages} de ${totalPages}`;
 }
 
 function initColoring(){
@@ -548,14 +1485,19 @@ function initColoring(){
   });
 }
 function prevHero(){
-  currentHeroIndex = (currentHeroIndex - 1 + totalHeroes) % totalHeroes;
+  currentHeroIndex = (currentHeroIndex - 1 + totalPages) % totalPages;
   renderHero();
 }
 function nextHero(){
-  currentHeroIndex = (currentHeroIndex + 1) % totalHeroes;
+  currentHeroIndex = (currentHeroIndex + 1) % totalPages;
   renderHero();
 }
 function resetColoring(){
+  if(currentHeroIndex === heroTemplates.length){
+    freeDrawDataURL = null;
+    renderFreeDraw();
+    return;
+  }
   heroFills[currentHeroIndex] = {...heroTemplates[currentHeroIndex].fills};
   renderHero();
 }
@@ -634,10 +1576,128 @@ function pickLetter(tileIdx){
 function nextWord(){
   wordIndex++;
   if(wordIndex >= words.length){
-    goTo('final');
+    completeMission('palavras');
     return;
   }
   loadWord();
+}
+
+/* ---------- Jogo da Memória (3 fases) ---------- */
+const memoryPhases = [
+  { size:2, type:'icons', icons:['🦖','💎'] },
+  { size:3, type:'colors', colors:['#E15A4C','#4A90C4','#4FA97E','#DB6BA0'], bonus:true, bonusIcon:'⭐' },
+  { size:4, type:'icons', icons:['🦖','💎','🌈','⭐','🌳','🦋','🎨','🌟'] }
+];
+let memoryPhaseIndex = 0;
+let memoryCards = [];
+let memoryFlipped = [];
+let memoryLock = false;
+
+function buildMemoryDeck(phase){
+  const total = phase.size * phase.size;
+  if(phase.bonus){
+    const pairsCount = (total - 1) / 2;
+    const base = phase.colors.slice(0, pairsCount);
+    let deck = shuffle(base.concat(base)).map(v=>({value:v, type:phase.type, matched:false}));
+    const centerIndex = Math.floor(total / 2);
+    deck.splice(centerIndex, 0, {value:phase.bonusIcon, type:'icon', matched:true, bonus:true});
+    return deck;
+  }
+  const pairsCount = total / 2;
+  const base = phase.icons.slice(0, pairsCount);
+  return shuffle(base.concat(base)).map(v=>({value:v, type:phase.type, matched:false}));
+}
+
+function initMemory(){
+  memoryPhaseIndex = 0;
+  loadMemoryPhase();
+}
+
+function loadMemoryPhase(){
+  const phase = memoryPhases[memoryPhaseIndex];
+  memoryCards = buildMemoryDeck(phase);
+  memoryFlipped = [];
+  memoryLock = false;
+  document.getElementById('memoryPhaseTitle').textContent = `Fase ${memoryPhaseIndex+1} de ${memoryPhases.length}`;
+  document.getElementById('memoryHint').textContent = phase.type==='colors'
+    ? 'Encontre os pares de cores iguais!'
+    : 'Encontre todos os pares!';
+  document.getElementById('memoryNextBtn').classList.remove('show');
+  document.getElementById('memoryProgress').textContent = '';
+  const grid = document.getElementById('memoryGrid');
+  grid.style.gridTemplateColumns = `repeat(${phase.size}, 1fr)`;
+  const fontSize = phase.size === 2 ? '2.2rem' : (phase.size === 3 ? '1.7rem' : '1.3rem');
+  grid.innerHTML = memoryCards.map((card, i)=>{
+    if(card.bonus || card.matched){
+      const inner = card.type==='colors' ? `<div class="memory-swatch" style="background:${card.value}"></div>` : card.value;
+      const cls = card.bonus ? 'bonus' : 'matched';
+      return `<button class="memory-card ${cls}" style="font-size:${fontSize}" disabled>${inner}</button>`;
+    }
+    return `<button class="memory-card" style="font-size:${fontSize}" onclick="flipMemoryCard(${i})" id="mcard-${i}">🔷</button>`;
+  }).join('');
+  checkMemoryWin();
+}
+
+function flipMemoryCard(i){
+  if(memoryLock) return;
+  const card = memoryCards[i];
+  if(card.matched || card.bonus) return;
+  if(memoryFlipped.includes(i)) return;
+
+  const btn = document.getElementById(`mcard-${i}`);
+  btn.classList.add('flipped');
+  btn.innerHTML = card.type==='colors' ? `<div class="memory-swatch" style="background:${card.value}"></div>` : card.value;
+  memoryFlipped.push(i);
+
+  if(memoryFlipped.length === 2){
+    memoryLock = true;
+    const [a,b] = memoryFlipped;
+    if(memoryCards[a].value === memoryCards[b].value){
+      memoryCards[a].matched = true;
+      memoryCards[b].matched = true;
+      setTimeout(()=>{
+        [a,b].forEach(idx=>{
+          const el = document.getElementById(`mcard-${idx}`);
+          if(el){ el.classList.remove('flipped'); el.classList.add('matched'); el.disabled = true; }
+        });
+        memoryFlipped = [];
+        memoryLock = false;
+        checkMemoryWin();
+      }, 350);
+    } else {
+      setTimeout(()=>{
+        [a,b].forEach(idx=>{
+          const el = document.getElementById(`mcard-${idx}`);
+          if(el && !memoryCards[idx].matched){ el.classList.remove('flipped'); el.innerHTML = '🔷'; }
+        });
+        memoryFlipped = [];
+        memoryLock = false;
+      }, 700);
+    }
+  }
+}
+
+function checkMemoryWin(){
+  const allMatched = memoryCards.every(c => c.matched || c.bonus);
+  if(allMatched){
+    const isLast = memoryPhaseIndex === memoryPhases.length - 1;
+    document.getElementById('memoryProgress').textContent = isLast
+      ? 'Você completou todas as fases! 🎉'
+      : 'Fase completa! 🎉';
+    const btn = document.getElementById('memoryNextBtn');
+    btn.textContent = isLast ? 'Concluir Missão ⭐' : 'Próxima fase →';
+    btn.onclick = isLast ? ()=>completeMission('memoria') : nextMemoryPhase;
+    btn.classList.add('show');
+  }
+}
+
+function nextMemoryPhase(){
+  memoryPhaseIndex = memoryPhaseIndex + 1;
+  loadMemoryPhase();
+}
+
+function restartMemoryPhase(){
+  loadMemoryPhase();
 }
 </script>
 </body>
