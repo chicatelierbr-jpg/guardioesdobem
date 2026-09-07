@@ -331,6 +331,92 @@
     50%{ transform: translateY(-6px); }
   }
 
+  /* Coragem — resgate dos dinossauros */
+  .rescue-scene{
+    display:flex; gap:10px; margin: 14px 0;
+  }
+  .rescue-panel{
+    flex:1;
+    position:relative;
+    overflow:hidden;
+    border-radius: 18px;
+    padding: 10px 8px;
+    min-height: 190px;
+  }
+  .rescue-panel.burning{
+    background: linear-gradient(180deg, #FBE3D0, #F7C9A6);
+    border: 2px solid #E8A05C;
+  }
+  .rescue-panel.safe{
+    background: linear-gradient(180deg, #E1F3E3, #C9EAD0);
+    border: 2px solid #7FBE6A;
+  }
+  .rescue-bg{
+    position:absolute; inset:0;
+    width:100%; height:100%;
+    z-index:0;
+    pointer-events:none;
+    display:block;
+  }
+  .flame-flicker path{
+    transform-origin: 50% 100%;
+    animation: flicker 0.9s ease-in-out infinite;
+  }
+  .flame-flicker path:nth-child(2){ animation-delay: -0.3s; }
+  .flame-flicker path:nth-child(3){ animation-delay: -0.6s; }
+  @keyframes flicker{
+    0%,100%{ transform: scaleY(1) skewX(0deg); }
+    50%{ transform: scaleY(1.08) skewX(-2deg); }
+  }
+  .river-shimmer{
+    animation: shimmer 2.4s ease-in-out infinite;
+  }
+  @keyframes shimmer{
+    0%,100%{ opacity:0.5; }
+    50%{ opacity:0.9; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .flame-flicker path, .river-shimmer{ animation:none; }
+  }
+  .rescue-label{
+    position:relative; z-index:2;
+    font-size:0.78rem; font-weight:bold; text-align:center;
+    color:#4B463F; margin-bottom:6px;
+    text-shadow: 0 0 4px rgba(255,255,255,0.8);
+  }
+  .rescue-grid{
+    position:relative; z-index:2;
+    display:flex; flex-wrap:wrap; justify-content:center; align-content:flex-end; gap:8px;
+    min-height:110px;
+    height: 100%;
+    padding-bottom: 14px;
+    box-sizing: border-box;
+  }
+  .rescue-dino{
+    width:44px; height:44px; border-radius:12px; border:none;
+    background: rgba(255,255,255,0.75);
+    font-size:1.6rem;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow: 0 3px 0 rgba(0,0,0,0.15);
+    cursor:pointer;
+    animation: dinoWiggle 1.6s ease-in-out infinite;
+  }
+  .rescue-dino:nth-child(even){ animation-delay: -0.8s; }
+  @keyframes dinoWiggle{
+    0%,100%{ transform: rotate(-4deg); }
+    50%{ transform: rotate(4deg); }
+  }
+  .rescue-dino.safe-item{
+    background: rgba(255,255,255,0.6);
+    cursor:default;
+    animation: none;
+  }
+  @keyframes dinoRescued{
+    0%{ transform: scale(1); opacity:1; }
+    100%{ transform: scale(0.3); opacity:0; }
+  }
+  .rescue-dino.rescuing{ animation: dinoRescued 0.35s forwards; }
+
   .mission-intro-wrap{
     width:100%;
     background: var(--card);
@@ -753,6 +839,81 @@
     </div>
   </section>
 
+  <!-- CORAGEM -->
+  <section class="screen" id="screen-coragem">
+    <div class="topbar">
+      <button class="back-btn" onclick="goTo('missions')">← Voltar</button>
+      <div></div>
+    </div>
+    <div class="word-wrap">
+      <h2 id="coragemTitle">Salve os dinossauros!</h2>
+      <p class="hint" id="coragemHint">Toque no bicho para levá-lo à floresta segura!</p>
+      <div class="rescue-scene">
+        <div class="rescue-panel burning">
+          <svg class="rescue-bg" viewBox="0 0 300 200" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="fireSky" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#F7C9A6"/>
+                <stop offset="100%" stop-color="#FBE3D0"/>
+              </linearGradient>
+              <radialGradient id="flameGrad" cx="50%" cy="85%" r="75%">
+                <stop offset="0%" stop-color="#FFE28A"/>
+                <stop offset="55%" stop-color="#F6A93B"/>
+                <stop offset="100%" stop-color="#E1552B"/>
+              </radialGradient>
+            </defs>
+            <rect width="300" height="200" fill="url(#fireSky)"/>
+            <ellipse cx="55" cy="28" rx="30" ry="14" fill="#8a8a8a" opacity="0.22"/>
+            <ellipse cx="225" cy="20" rx="34" ry="16" fill="#8a8a8a" opacity="0.2"/>
+            <rect x="0" y="162" width="300" height="38" fill="#6B4A2C"/>
+            <g><rect x="28" y="108" width="8" height="55" fill="#4A3324"/><polygon points="32,58 12,113 52,113" fill="#3F7A34"/><polygon points="32,78 16,118 48,118" fill="#2E5C27"/></g>
+            <g><rect x="238" y="103" width="8" height="60" fill="#4A3324"/><polygon points="242,53 220,113 264,113" fill="#3F7A34"/><polygon points="242,76 224,118 260,118" fill="#2E5C27"/></g>
+            <g><rect x="128" y="118" width="7" height="45" fill="#2A1E16"/><polygon points="131,83 116,123 146,123" fill="#26201B" opacity="0.85"/></g>
+            <ellipse cx="78" cy="170" rx="16" ry="9" fill="#9B948A"/>
+            <ellipse cx="198" cy="172" rx="20" ry="10" fill="#9B948A"/>
+            <g class="flame-flicker">
+              <path d="M58 165 Q50 140 63 118 Q68 140 76 126 Q78 150 58 165 Z" fill="url(#flameGrad)"/>
+              <path d="M148 168 Q138 136 156 110 Q162 138 173 120 Q176 150 148 168 Z" fill="url(#flameGrad)"/>
+              <path d="M213 165 Q204 140 218 120 Q224 144 234 128 Q236 152 213 165 Z" fill="url(#flameGrad)"/>
+            </g>
+          </svg>
+          <div class="rescue-label">🔥 Floresta em Perigo</div>
+          <div class="rescue-grid" id="coragemBurningGrid"></div>
+        </div>
+        <div class="rescue-panel safe">
+          <svg class="rescue-bg" viewBox="0 0 300 200" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="safeSky" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#CDEAD1"/>
+                <stop offset="100%" stop-color="#E9F7E5"/>
+              </linearGradient>
+            </defs>
+            <rect width="300" height="200" fill="url(#safeSky)"/>
+            <path d="M180 38 Q186 30 192 38 Q198 30 204 38" stroke="#4A4540" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <g transform="translate(88,48)">
+              <ellipse cx="-5" cy="-3" rx="5" ry="7" fill="#DB6BA0"/><ellipse cx="5" cy="-3" rx="5" ry="7" fill="#DB6BA0"/>
+              <ellipse cx="-5" cy="6" rx="4" ry="5" fill="#F5C542"/><ellipse cx="5" cy="6" rx="4" ry="5" fill="#F5C542"/>
+              <line x1="0" y1="-8" x2="0" y2="8" stroke="#4A4540" stroke-width="1.5"/>
+            </g>
+            <g><rect x="24" y="93" width="8" height="55" fill="#5C4327"/><circle cx="28" cy="83" r="26" fill="#4FA97E"/></g>
+            <g><rect x="248" y="88" width="8" height="60" fill="#5C4327"/><circle cx="252" cy="78" r="28" fill="#4FA97E"/></g>
+            <rect x="0" y="150" width="300" height="50" fill="#7FBE6A"/>
+            <circle cx="100" cy="145" r="4" fill="#DB6BA0"/><circle cx="110" cy="148" r="4" fill="#F5C542"/><circle cx="190" cy="146" r="4" fill="#DB6BA0"/>
+            <path d="M0 168 Q60 158 120 170 Q180 182 240 168 Q270 162 300 170 L300 200 L0 200 Z" fill="#6EC1E0"/>
+            <path class="river-shimmer" d="M0 172 Q60 164 120 174 Q180 184 240 172 Q270 167 300 174" stroke="#EAFBFF" stroke-width="3" fill="none" opacity="0.7"/>
+            <ellipse cx="68" cy="178" rx="10" ry="4" fill="#4FA97E"/>
+            <ellipse cx="228" cy="182" rx="9" ry="4" fill="#4FA97E"/>
+            <g transform="translate(150,180)"><path d="M0 0 Q10 -6 20 0 Q10 6 0 0 Z" fill="#F5C542"/><polygon points="0,0 -6,-4 -6,4" fill="#F5C542"/></g>
+          </svg>
+          <div class="rescue-label">🌳 Floresta Segura</div>
+          <div class="rescue-grid" id="coragemSafeGrid"></div>
+        </div>
+      </div>
+      <div class="progress" id="coragemProgress"></div>
+      <button class="next-btn" id="coragemNextBtn" onclick="nextCoragemRound()">Próxima →</button>
+    </div>
+  </section>
+
   <!-- FINAL -->
   <section class="screen" id="screen-final">
     <div class="topbar">
@@ -793,6 +954,7 @@ function goTo(name){
   if(name==='contagem' && !window._contagemInit){ initContagem(); window._contagemInit=true; }
   if(name==='logica' && !window._logicaInit){ initLogica(); window._logicaInit=true; }
   if(name==='precisao' && !window._precisaoInit){ initPrecisao(); window._precisaoInit=true; }
+  if(name==='coragem' && !window._coragemInit){ initCoragem(); window._coragemInit=true; }
   window.scrollTo(0,0);
 }
 
@@ -846,7 +1008,9 @@ const missions = [
   { id:'logica',    nome:'Lógica',       cor:'#9B6FC9', acessorio:'🔷', screen:'logica',   existente:true,
     mensagem:'O que vem depois? Descubra o padrão!' },
   { id:'precisao',  nome:'Precisão',     cor:'#45BFB8', acessorio:'🎯', screen:'precisao', existente:true,
-    mensagem:'Vamos estourar os balões com cuidado!' }
+    mensagem:'Vamos estourar os balões com cuidado!' },
+  { id:'coragem',   nome:'Coragem',      cor:'#A65D33', acessorio:'🧯', screen:'coragem',  existente:true,
+    mensagem:'Os bichos da floresta precisam da sua coragem! Leve-os para um lugar seguro!' }
 ];
 
 function renderMissionGrid(){
@@ -997,13 +1161,15 @@ function tapDetetive(i){
 function nextDetetiveRound(){ detetiveIndex++; loadDetetiveRound(); }
 function initDetetive(){ detetiveIndex = 0; loadDetetiveRound(); }
 
-/* ---------- CONTAGEM (5 rodadas) ---------- */
+/* ---------- CONTAGEM (7 rodadas) ---------- */
 const contagemRounds = [
   { type:'count', emoji:'🍎', count:2 },
-  { type:'count', emoji:'🍎', count:3 },
-  { type:'count', emoji:'🎈', count:4 },
-  { type:'count', emoji:'⭐', count:5 },
-  { type:'compare', emoji:'🍇', left:3, right:5 }
+  { type:'count', emoji:'🎈', count:3 },
+  { type:'count', emoji:'⭐', count:4 },
+  { type:'count', emoji:'🌸', count:5 },
+  { type:'count', emoji:'🐟', count:6 },
+  { type:'compare', emoji:'🍇', left:3, right:5 },
+  { type:'compare', emoji:'🦋', left:6, right:2 }
 ];
 let contagemIndex = 0;
 
@@ -1021,7 +1187,7 @@ function loadContagemRound(){
   document.getElementById('contagemNextBtn').classList.remove('show');
   if(round.type==='count'){
     document.getElementById('contagemPergunta').textContent = `Quantos ${round.emoji} existem?`;
-    document.getElementById('contagemDisplay').innerHTML = round.emoji.repeat(round.count).split('').join(' ');
+    document.getElementById('contagemDisplay').innerHTML = Array(round.count).fill(round.emoji).join(' ');
     const opts = numericOptions(round.count);
     document.getElementById('contagemOptions').innerHTML = opts.map(n=>
       `<button class="count-option" onclick="tapContagem(${n})">${n}</button>`
@@ -1099,14 +1265,18 @@ function tapLogica(i){
 function nextLogicaRound(){ logicaIndex++; loadLogicaRound(); }
 function initLogica(){ logicaIndex = 0; loadLogicaRound(); }
 
-/* ---------- PRECISÃO (3 rodadas, sem cronômetro) ---------- */
+/* ---------- PRECISÃO (5 rodadas, sem cronômetro) ---------- */
 const precisaoRounds = [
   { instrucao:'Estoure todos os balões!', targetColor:null, total:6,
     colors:['#E15A4C','#4A90C4','#4FA97E','#F5C542','#DB6BA0','#9B6FC9'] },
   { instrucao:'Estoure somente os balões azuis!', targetColor:'#4A90C4', total:8,
     colors:['#4A90C4','#E15A4C','#4A90C4','#F5C542','#4A90C4','#DB6BA0','#4A90C4','#4FA97E'] },
   { instrucao:'Estoure somente os balões vermelhos!', targetColor:'#E15A4C', total:10,
-    colors:['#E15A4C','#4A90C4','#E15A4C','#F5C542','#E15A4C','#DB6BA0','#E15A4C','#4FA97E','#E15A4C','#9B6FC9'] }
+    colors:['#E15A4C','#4A90C4','#E15A4C','#F5C542','#E15A4C','#DB6BA0','#E15A4C','#4FA97E','#E15A4C','#9B6FC9'] },
+  { instrucao:'Estoure somente os balões verdes!', targetColor:'#4FA97E', total:12,
+    colors:['#4FA97E','#E15A4C','#4FA97E','#4A90C4','#4FA97E','#F5C542','#4FA97E','#DB6BA0','#4FA97E','#9B6FC9','#4FA97E','#45BFB8'] },
+  { instrucao:'Estoure somente os balões roxos!', targetColor:'#9B6FC9', total:14,
+    colors:['#9B6FC9','#E15A4C','#9B6FC9','#4A90C4','#9B6FC9','#F5C542','#9B6FC9','#DB6BA0','#9B6FC9','#4FA97E','#9B6FC9','#45BFB8','#9B6FC9','#F0954A'] }
 ];
 let precisaoIndex = 0;
 let precisaoBalloons = [];
@@ -1153,6 +1323,64 @@ function tapBalloon(i){
 }
 function nextPrecisaoRound(){ precisaoIndex++; loadPrecisaoRound(); }
 function initPrecisao(){ precisaoIndex = 0; loadPrecisaoRound(); }
+
+/* ---------- CORAGEM (salvar os dinossauros, 3 rodadas) ---------- */
+const coragemCreaturePool = ['🦕','🦖','🐊','🦎','🐢','🦅'];
+const coragemRounds = [
+  { total:4 },
+  { total:6 },
+  { total:8 }
+];
+let coragemIndex = 0;
+let coragemDinos = [];
+
+function pickCreatures(n){
+  let extended = [];
+  while(extended.length < n){
+    extended = extended.concat(shuffle(coragemCreaturePool));
+  }
+  return extended.slice(0, n);
+}
+
+function loadCoragemRound(){
+  const round = coragemRounds[coragemIndex];
+  coragemDinos = pickCreatures(round.total).map(d=>({emoji:d, rescued:false}));
+  document.getElementById('coragemTitle').textContent = `Rodada ${coragemIndex+1} de ${coragemRounds.length}`;
+  document.getElementById('coragemHint').textContent = 'Toque no bicho para levá-lo à floresta segura!';
+  document.getElementById('coragemProgress').textContent = '';
+  document.getElementById('coragemNextBtn').classList.remove('show');
+  renderCoragem();
+}
+function renderCoragem(){
+  document.getElementById('coragemBurningGrid').innerHTML = coragemDinos.map((d,i)=>
+    !d.rescued ? `<button class="rescue-dino" id="cdino-${i}" onclick="rescueDino(${i})">${d.emoji}</button>` : ''
+  ).join('');
+  document.getElementById('coragemSafeGrid').innerHTML = coragemDinos.filter(d=>d.rescued).map(d=>
+    `<div class="rescue-dino safe-item">${d.emoji}</div>`
+  ).join('');
+}
+function rescueDino(i){
+  const el = document.getElementById(`cdino-${i}`);
+  if(!el) return;
+  el.classList.add('rescuing');
+  setTimeout(()=>{
+    coragemDinos[i].rescued = true;
+    renderCoragem();
+    checkCoragemWin();
+  }, 300);
+}
+function checkCoragemWin(){
+  if(coragemDinos.every(d=>d.rescued)){
+    const isLast = coragemIndex === coragemRounds.length - 1;
+    document.getElementById('coragemProgress').textContent = 'Todos os dinossauros estão a salvo! 🎉';
+    const nb = document.getElementById('coragemNextBtn');
+    nb.textContent = isLast ? 'Concluir Missão ⭐' : 'Próxima →';
+    nb.onclick = isLast ? ()=>completeMission('coragem') : nextCoragemRound;
+    nb.classList.add('show');
+  }
+}
+function nextCoragemRound(){ coragemIndex++; loadCoragemRound(); }
+function initCoragem(){ coragemIndex = 0; loadCoragemRound(); }
 
 /* ---------- Conclusão de missão (Fase 2) ---------- */
 const missionsCompleted = new Set();
