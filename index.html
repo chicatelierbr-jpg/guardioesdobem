@@ -272,6 +272,54 @@
     75%{ transform: translateX(5px); }
   }
   .shape-slot.shake{ animation: shakeSlot 0.3s; }
+  .shake-svg{ animation: shakeSlot 0.3s; }
+
+  /* Mega Robô — formas geométricas reais */
+  .shape-render.circle{ border-radius:50%; }
+  .shape-render.square{ border-radius:8px; }
+  .shape-render.rect{ border-radius:8px; }
+  .shape-render.rect-tall{ border-radius:8px; }
+  .shape-render.rect-short{ border-radius:8px; }
+  .shape-render.triangle{ border-radius:2px; clip-path: polygon(50% 4%, 4% 96%, 96% 96%); }
+  .shape-render.trapezoid{ border-radius:2px; clip-path: polygon(26% 6%, 74% 6%, 96% 94%, 4% 94%); }
+
+  .robo-preview{ display:flex; justify-content:center; margin: 10px 0; }
+  .robo-preview svg{ width:150px; height:auto; }
+
+  .robo-scatter{
+    display:flex; flex-wrap:wrap; justify-content:center; gap:10px;
+    margin: 10px 0; max-width:320px; margin-left:auto; margin-right:auto;
+  }
+  .robo-scatter-item{
+    width:48px; height:48px; border:none; cursor:pointer;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.15);
+  }
+  .robo-scatter-item.found{ opacity:0.25; box-shadow:none; cursor:default; }
+
+  .robo-seq-track{ display:flex; justify-content:center; gap:10px; margin: 10px 0; }
+  .robo-seq-track .seq-mark{
+    width:44px; height:44px; border-radius:12px;
+    border: 3px dashed var(--line);
+    display:flex; align-items:center; justify-content:center; font-size:1.3rem;
+  }
+  .robo-seq-track .seq-mark.filled{ border-style:solid; border-color:var(--verde); }
+  .robo-seq-options{ display:flex; justify-content:center; gap:14px; margin: 10px 0; }
+  .robo-seq-btn{
+    width:56px; height:56px; border:none; cursor:pointer;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.15);
+  }
+  .robo-seq-btn:active{ transform: translateY(3px); box-shadow:none; }
+
+  .robo-activation{
+    text-align:center;
+    animation: roboPop 0.6s ease-out;
+  }
+  @keyframes roboPop{
+    0%{ transform: scale(0.6); opacity:0; }
+    70%{ transform: scale(1.08); opacity:1; }
+    100%{ transform: scale(1); }
+  }
+  .robo-glow svg{ filter: drop-shadow(0 0 14px #FDE16A); }
 
   /* Detetive */
   .detective-grid{
@@ -293,6 +341,7 @@
   .count-display{
     font-size: 2.4rem; text-align:center; margin: 14px 0;
     line-height:1.4;
+    display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:12px;
   }
   .count-options{ display:flex; justify-content:center; gap:14px; }
   .count-option{
@@ -301,6 +350,20 @@
     box-shadow: 0 4px 0 rgba(0,0,0,0.15); cursor:pointer;
   }
   .count-option:active{ transform: translateY(3px); box-shadow:none; }
+  .compare-group{
+    flex: 1 1 120px;
+    max-width: 100%;
+    font-size: 1.8rem;
+    padding: 14px 10px;
+    border-radius: 18px;
+    border: 3px solid var(--line);
+    background: var(--bg2);
+    box-shadow: 0 4px 0 rgba(0,0,0,0.12);
+    cursor:pointer;
+  }
+  .compare-group:active{ transform: translateY(3px); box-shadow:none; }
+  .compare-group.correct{ background:#DFF3E3; border-color: var(--verde); }
+  .compare-group.shake{ animation: shakeSlot 0.3s; }
 
   /* Lógica */
   .logic-sequence{ font-size:2rem; text-align:center; margin: 14px 0; letter-spacing:4px; }
@@ -453,6 +516,20 @@
     z-index: 50;
   }
   .toast.show{ opacity:1; transform: translateX(-50%) translateY(0); }
+
+  .voice-toggle{
+    position:fixed;
+    top:12px; right:12px;
+    z-index:60;
+    width:42px; height:42px;
+    border-radius:50%;
+    border:none;
+    background: var(--card);
+    box-shadow: var(--shadow);
+    font-size:1.2rem;
+    cursor:pointer;
+  }
+  .voice-toggle:active{ transform: translateY(2px); box-shadow:none; }
 
   .topbar{
     width:100%; max-width:520px;
@@ -914,6 +991,22 @@
     </div>
   </section>
 
+  <!-- MEGA ROBÔ -->
+  <section class="screen" id="screen-megarobo">
+    <div class="topbar">
+      <button class="back-btn" onclick="goTo('missions')">← Voltar</button>
+      <button class="back-btn" onclick="restartRoboPhase()">Recomeçar fase</button>
+    </div>
+    <div class="word-wrap">
+      <h2 id="roboTitle">Fase 1 de 6</h2>
+      <p class="hint" id="roboHint">Encontre o retângulo para o corpo do robô!</p>
+      <div id="roboSvgHolder" class="robo-preview"></div>
+      <div id="roboGameArea"></div>
+      <div class="progress" id="roboProgress"></div>
+      <button class="next-btn" id="roboNextBtn" onclick="nextRoboPhase()">Próxima fase →</button>
+    </div>
+  </section>
+
   <!-- FINAL -->
   <section class="screen" id="screen-final">
     <div class="topbar">
@@ -955,6 +1048,7 @@ function goTo(name){
   if(name==='logica' && !window._logicaInit){ initLogica(); window._logicaInit=true; }
   if(name==='precisao' && !window._precisaoInit){ initPrecisao(); window._precisaoInit=true; }
   if(name==='coragem' && !window._coragemInit){ initCoragem(); window._coragemInit=true; }
+  if(name==='megarobo' && !window._roboInit){ initRobo(); window._roboInit=true; }
   window.scrollTo(0,0);
 }
 
@@ -1010,7 +1104,9 @@ const missions = [
   { id:'precisao',  nome:'Precisão',     cor:'#45BFB8', acessorio:'🎯', screen:'precisao', existente:true,
     mensagem:'Vamos estourar os balões com cuidado!' },
   { id:'coragem',   nome:'Coragem',      cor:'#A65D33', acessorio:'🧯', screen:'coragem',  existente:true,
-    mensagem:'Os bichos da floresta precisam da sua coragem! Leve-os para um lugar seguro!' }
+    mensagem:'Os bichos da floresta precisam da sua coragem! Leve-os para um lugar seguro!' },
+  { id:'megarobo',  nome:'Mega Robô',    cor:'#4A4540', acessorio:'🤖', screen:'megarobo', existente:true,
+    mensagem:'🚨 O Mega Robô precisa da sua ajuda! Vamos encontrar e encaixar as peças dele?' }
 ];
 
 function renderMissionGrid(){
@@ -1054,6 +1150,34 @@ function showToast(text){
   toastTimer = setTimeout(()=> toast.classList.remove('show'), 2200);
 }
 
+/* ---------- Narração por voz (opcional, minimalista) ---------- */
+let voiceEnabled = true;
+function speak(text){
+  if(!voiceEnabled) return;
+  if(!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = 'pt-BR';
+  utter.rate = 0.95;
+  utter.pitch = 1.0;
+  window.speechSynthesis.speak(utter);
+}
+function initVoiceToggle(){
+  if(document.getElementById('voiceToggle')) return;
+  const btn = document.createElement('button');
+  btn.id = 'voiceToggle';
+  btn.className = 'voice-toggle';
+  btn.textContent = '🔊';
+  btn.setAttribute('aria-label', 'Ativar ou desativar narração');
+  btn.onclick = ()=>{
+    voiceEnabled = !voiceEnabled;
+    btn.textContent = voiceEnabled ? '🔊' : '🔇';
+    if(!voiceEnabled && 'speechSynthesis' in window) window.speechSynthesis.cancel();
+  };
+  document.body.appendChild(btn);
+}
+initVoiceToggle();
+
 /* ---------- MONTAR (5 níveis: 3, 4, 6, 8, 10 peças) ---------- */
 const montarColorPool = ['#E15A4C','#4A90C4','#4A4540','#DB6BA0','#4FA97E','#F5C542','#9B6FC9','#F0954A','#45BFB8','#7EC8E3'];
 const montarLevelSizes = [3,4,6,8,10];
@@ -1071,6 +1195,7 @@ function loadMontarLevel(){
   document.getElementById('montarTitle').textContent = `Nível ${montarLevelIndex+1} de ${montarLevelSizes.length}`;
   document.getElementById('montarProgress').textContent = '';
   document.getElementById('montarNextBtn').classList.remove('show');
+  speak('Toque numa peça e depois no espaço da mesma cor!');
   renderMontar();
 }
 
@@ -1135,6 +1260,7 @@ function loadDetetiveRound(){
   document.getElementById('detetiveQuestion').textContent = round.question;
   document.getElementById('detetiveProgress').textContent = `Rodada ${detetiveIndex+1} de ${detetiveRounds.length}`;
   document.getElementById('detetiveNextBtn').classList.remove('show');
+  speak(round.question);
   const shuffled = shuffle(round.options);
   document.getElementById('detetiveGrid').innerHTML = shuffled.map((opt,i)=>
     `<button class="detective-item" id="ditem-${i}" data-val="${opt}" onclick="tapDetetive(${i})">${opt}</button>`
@@ -1192,14 +1318,14 @@ function loadContagemRound(){
     document.getElementById('contagemOptions').innerHTML = opts.map(n=>
       `<button class="count-option" onclick="tapContagem(${n})">${n}</button>`
     ).join('');
+    speak('Quantos você vê? Escolha o número certo.');
   } else {
-    document.getElementById('contagemPergunta').textContent = 'Qual grupo tem mais?';
+    document.getElementById('contagemPergunta').textContent = 'Toque no grupo que tem mais!';
     document.getElementById('contagemDisplay').innerHTML =
-      `<span class="detective-item" style="display:inline-flex; width:auto; padding:10px 14px; margin-right:10px;">${round.emoji.repeat(round.left)}</span>` +
-      `<span class="detective-item" style="display:inline-flex; width:auto; padding:10px 14px;">${round.emoji.repeat(round.right)}</span>`;
-    document.getElementById('contagemOptions').innerHTML = `
-      <button class="count-option" style="width:auto; padding:0 18px;" onclick="tapContagemCompare('left')">⬅️ Esquerda</button>
-      <button class="count-option" style="width:auto; padding:0 18px;" onclick="tapContagemCompare('right')">➡️ Direita</button>`;
+      `<button class="compare-group" id="cgroup-left" onclick="tapContagemCompare('left')">${round.emoji.repeat(round.left)}</button>` +
+      `<button class="compare-group" id="cgroup-right" onclick="tapContagemCompare('right')">${round.emoji.repeat(round.right)}</button>`;
+    document.getElementById('contagemOptions').innerHTML = '';
+    speak('Toque no grupo que tem mais!');
   }
 }
 function contagemSuccess(){
@@ -1209,7 +1335,7 @@ function contagemSuccess(){
   nb.textContent = isLast ? 'Concluir Missão ⭐' : 'Próxima →';
   nb.onclick = isLast ? ()=>completeMission('contagem') : nextContagemRound;
   nb.classList.add('show');
-  document.querySelectorAll('#contagemOptions button').forEach(b=>b.onclick=null);
+  document.querySelectorAll('#contagemOptions button, .compare-group').forEach(b=>b.onclick=null);
 }
 function tapContagem(n){
   const round = contagemRounds[contagemIndex];
@@ -1219,8 +1345,15 @@ function tapContagem(n){
 function tapContagemCompare(side){
   const round = contagemRounds[contagemIndex];
   const correctSide = round.right > round.left ? 'right' : 'left';
-  if(side === correctSide){ contagemSuccess(); }
-  else { document.getElementById('contagemProgress').textContent = 'Quase! Tente de novo.'; }
+  if(side === correctSide){
+    document.getElementById(`cgroup-${side}`).classList.add('correct');
+    contagemSuccess();
+  } else {
+    const el = document.getElementById(`cgroup-${side}`);
+    el.classList.add('shake');
+    setTimeout(()=>el.classList.remove('shake'), 300);
+    document.getElementById('contagemProgress').textContent = 'Quase! Tente de novo.';
+  }
 }
 function nextContagemRound(){ contagemIndex++; loadContagemRound(); }
 function initContagem(){ contagemIndex = 0; loadContagemRound(); }
@@ -1382,6 +1515,311 @@ function checkCoragemWin(){
 function nextCoragemRound(){ coragemIndex++; loadCoragemRound(); }
 function initCoragem(){ coragemIndex = 0; loadCoragemRound(); }
 
+/* ---------- MEGA ROBÔ (6 fases + ativação) ---------- */
+const roboParts = {
+  corpo:      {shape:'rect',       color:'#E15A4C', phase:0},
+  cabeca:     {shape:'square',     color:'#4A90C4', phase:1},
+  'olho-e':   {shape:'circle',     color:'#4A4540', phase:1},
+  'olho-d':   {shape:'circle',     color:'#4A4540', phase:1},
+  antena:     {shape:'triangle',   color:'#F5C542', phase:1},
+  'braco-e':  {shape:'rect-tall',  color:'#4FA97E', phase:2},
+  'braco-d':  {shape:'rect-tall',  color:'#4FA97E', phase:2},
+  'perna-e':  {shape:'rect-short', color:'#9B6FC9', phase:2},
+  'perna-d':  {shape:'rect-short', color:'#9B6FC9', phase:2},
+  'mao-e':    {shape:'circle',     color:'#4A4540', phase:2},
+  'mao-d':    {shape:'circle',     color:'#4A4540', phase:2},
+  'pe-e':     {shape:'trapezoid',  color:'#F0954A', phase:2},
+  'pe-d':     {shape:'trapezoid',  color:'#F0954A', phase:2},
+  peito:      {shape:'rect',       color:'#45BFB8', phase:4},
+  'ombro-e':  {shape:'circle',     color:'#DB6BA0', phase:4},
+  'ombro-d':  {shape:'circle',     color:'#DB6BA0', phase:4},
+  'joelho-e': {shape:'circle',     color:'#DB6BA0', phase:4},
+  'joelho-d': {shape:'circle',     color:'#DB6BA0', phase:4}
+};
+const roboPhaseInfo = [
+  { titulo:'O Corpo', tipo:'assemble', hint:'Encontre o retângulo para o corpo do robô!', sucesso:'Muito bem! O corpo está pronto!' },
+  { titulo:'Cabeça e Olhos', tipo:'assemble', hint:'Monte a cabeça, os olhos e a antena!', sucesso:'Muito bem! A cabeça está pronta!' },
+  { titulo:'Braços e Pernas', tipo:'assemble', hint:'Encaixe os braços, as pernas, as mãos e os pés!', sucesso:'Muito bem! Agora ele pode andar!' },
+  { titulo:'Caça às Formas', tipo:'cacaformas', hint:'', sucesso:'Muito bem! Você conhece todas as formas!' },
+  { titulo:'Monte o Mega Robô', tipo:'assemble', hint:'Descubra onde cada peça deve ser colocada!', sucesso:'Incrível! O robô está quase pronto!' },
+  { titulo:'Desafio do Mega Robô', tipo:'sequencia', hint:'Toque na ordem certa para ativar o robô: círculo, triângulo, quadrado!', sucesso:'Você conseguiu! Hora de ativar o robô!' }
+];
+let roboPhaseIndex = 0;
+let roboFilled = {};
+let roboSelectedPiece = null;
+
+function shapeDims(shape){
+  switch(shape){
+    case 'circle': return {w:44,h:44};
+    case 'square': return {w:48,h:48};
+    case 'rect': return {w:64,h:38};
+    case 'rect-tall': return {w:26,h:70};
+    case 'rect-short': return {w:36,h:50};
+    case 'triangle': return {w:48,h:46};
+    case 'trapezoid': return {w:52,h:34};
+    default: return {w:48,h:48};
+  }
+}
+function getPartsForPhase(idx){
+  return Object.keys(roboParts).filter(k=>roboParts[k].phase===idx);
+}
+function roboMasterSvg(){
+  return `<svg viewBox="0 0 220 320" xmlns="http://www.w3.org/2000/svg">
+    <polygon id="rp-antena" points="110,52 98,84 122,84" fill="#ECE7DC" stroke="#C7BFAF" stroke-width="3" stroke-dasharray="5 4"/>
+    <rect id="rp-cabeca" x="80" y="86" width="60" height="54" rx="10" fill="#ECE7DC" stroke="#C7BFAF" stroke-width="3" stroke-dasharray="5 4"/>
+    <circle id="rp-olho-e" cx="97" cy="113" r="7" fill="#ECE7DC" stroke="#C7BFAF" stroke-width="2" stroke-dasharray="3 3"/>
+    <circle id="rp-olho-d" cx="123" cy="113" r="7" fill="#ECE7DC" stroke="#C7BFAF" stroke-width="2" stroke-dasharray="3 3"/>
+    <rect id="rp-corpo" x="68" y="148" width="84" height="96" rx="14" fill="#ECE7DC" stroke="#C7BFAF" stroke-width="3" stroke-dasharray="5 4"/>
+    <rect id="rp-braco-e" x="34" y="150" width="24" height="78" rx="10" fill="#ECE7DC" stroke="#C7BFAF" stroke-width="3" stroke-dasharray="5 4"/>
+    <rect id="rp-braco-d" x="162" y="150" width="24" height="78" rx="10" fill="#ECE7DC" stroke="#C7BFAF" stroke-width="3" stroke-dasharray="5 4"/>
+    <rect id="rp-perna-e" x="80" y="248" width="24" height="52" rx="8" fill="#ECE7DC" stroke="#C7BFAF" stroke-width="3" stroke-dasharray="5 4"/>
+    <rect id="rp-perna-d" x="116" y="248" width="24" height="52" rx="8" fill="#ECE7DC" stroke="#C7BFAF" stroke-width="3" stroke-dasharray="5 4"/>
+    <polygon id="rp-pe-e" points="76,300 108,300 114,320 70,320" fill="#ECE7DC" stroke="#C7BFAF" stroke-width="3" stroke-dasharray="5 4"/>
+    <polygon id="rp-pe-d" points="112,300 144,300 150,320 106,320" fill="#ECE7DC" stroke="#C7BFAF" stroke-width="3" stroke-dasharray="5 4"/>
+    <rect id="rp-peito" x="92" y="168" width="36" height="30" rx="6" fill="#ECE7DC" stroke="#C7BFAF" stroke-width="2" stroke-dasharray="3 3"/>
+    <circle id="rp-ombro-e" cx="58" cy="153" r="10" fill="#ECE7DC" stroke="#C7BFAF" stroke-width="2" stroke-dasharray="3 3"/>
+    <circle id="rp-ombro-d" cx="162" cy="153" r="10" fill="#ECE7DC" stroke="#C7BFAF" stroke-width="2" stroke-dasharray="3 3"/>
+    <circle id="rp-mao-e" cx="46" cy="232" r="11" fill="#ECE7DC" stroke="#C7BFAF" stroke-width="2" stroke-dasharray="3 3"/>
+    <circle id="rp-mao-d" cx="174" cy="232" r="11" fill="#ECE7DC" stroke="#C7BFAF" stroke-width="2" stroke-dasharray="3 3"/>
+    <circle id="rp-joelho-e" cx="92" cy="270" r="9" fill="#ECE7DC" stroke="#C7BFAF" stroke-width="2" stroke-dasharray="3 3"/>
+    <circle id="rp-joelho-d" cx="128" cy="270" r="9" fill="#ECE7DC" stroke="#C7BFAF" stroke-width="2" stroke-dasharray="3 3"/>
+  </svg>`;
+}
+function renderRoboPreview(){
+  const holder = document.getElementById('roboSvgHolder');
+  if(!holder.dataset.built){
+    holder.innerHTML = roboMasterSvg();
+    holder.dataset.built = '1';
+  }
+  Object.keys(roboParts).forEach(key=>{
+    const part = roboParts[key];
+    const el = document.getElementById(`rp-${key}`);
+    if(!el) return;
+    if(part.phase > roboPhaseIndex){
+      el.style.opacity = '0';
+      el.style.pointerEvents = 'none';
+      el.onclick = null;
+    } else if(roboFilled[key]){
+      el.style.opacity = '1';
+      el.setAttribute('fill', part.color);
+      el.removeAttribute('stroke-dasharray');
+      el.setAttribute('stroke', '#333');
+      el.style.cursor = 'default';
+      el.style.pointerEvents = 'none';
+      el.onclick = null;
+    } else if(part.phase === roboPhaseIndex){
+      el.style.opacity = '1';
+      el.setAttribute('fill', '#ECE7DC');
+      el.setAttribute('stroke', '#C7BFAF');
+      el.setAttribute('stroke-dasharray', part.phase===0 || part.phase===2 ? '5 4' : '3 3');
+      el.style.cursor = 'pointer';
+      el.style.pointerEvents = 'auto';
+      el.onclick = ()=> tapRoboSlot(key);
+    } else {
+      el.style.opacity = '0';
+      el.style.pointerEvents = 'none';
+    }
+  });
+}
+function selectRoboPiece(pieceId, shape, color){
+  document.querySelectorAll('#roboGameArea .shape-piece').forEach(el=>el.classList.remove('selected'));
+  const btn = document.getElementById(pieceId);
+  if(btn) btn.classList.add('selected');
+  roboSelectedPiece = {pieceId, shape, color};
+}
+function tapRoboSlot(key){
+  if(!roboSelectedPiece) return;
+  const part = roboParts[key];
+  if(roboSelectedPiece.shape === part.shape && roboSelectedPiece.color === part.color){
+    roboFilled[key] = true;
+    const btn = document.getElementById(roboSelectedPiece.pieceId);
+    if(btn) btn.classList.add('placed');
+    roboSelectedPiece = null;
+    renderRoboPreview();
+    checkRoboAssembleComplete();
+  } else {
+    const el = document.getElementById(`rp-${key}`);
+    el.classList.add('shake-svg');
+    setTimeout(()=>el.classList.remove('shake-svg'), 300);
+    document.getElementById('roboProgress').textContent = 'Quase! Tente outra peça.';
+  }
+}
+function buildRoboTray(phaseIdx){
+  const partsNeeded = getPartsForPhase(phaseIdx).map(k=>({shape:roboParts[k].shape, color:roboParts[k].color}));
+  const decoyPool = [
+    {shape:'circle', color:'#DB6BA0'}, {shape:'square', color:'#4FA97E'},
+    {shape:'triangle', color:'#4A90C4'}, {shape:'rect', color:'#9B6FC9'},
+    {shape:'trapezoid', color:'#E15A4C'}, {shape:'rect-tall', color:'#F5C542'}
+  ];
+  const usedSet = new Set(partsNeeded.map(p=>p.shape+p.color));
+  const availableDecoys = decoyPool.filter(d=>!usedSet.has(d.shape+d.color));
+  const decoys = shuffle(availableDecoys).slice(0, Math.min(2, availableDecoys.length));
+  return shuffle(partsNeeded.concat(decoys));
+}
+function checkRoboAssembleComplete(){
+  const needed = getPartsForPhase(roboPhaseIndex);
+  if(needed.every(k=>roboFilled[k])){
+    const info = roboPhaseInfo[roboPhaseIndex];
+    document.getElementById('roboProgress').textContent = info.sucesso;
+    speak(info.sucesso);
+    const nb = document.getElementById('roboNextBtn');
+    nb.textContent = 'Próxima fase →';
+    nb.onclick = nextRoboPhase;
+    nb.classList.add('show');
+  }
+}
+
+/* Fase 4: Caça às Formas */
+const cacaFormasTargets = ['triangle','circle','square'];
+let cacaFormasSubIndex = 0;
+let cacaFormasItems = [];
+function buildCacaFormasScatter(target){
+  const colorPool = ['#E15A4C','#4A90C4','#4FA97E','#F5C542','#DB6BA0','#9B6FC9','#F0954A','#45BFB8'];
+  const shapesAll = ['circle','square','triangle','rect','trapezoid'];
+  const items = [];
+  for(let i=0;i<3;i++){ items.push({shape:target, color: colorPool[Math.floor(Math.random()*colorPool.length)]}); }
+  const others = shapesAll.filter(s=>s!==target);
+  for(let i=0;i<4;i++){ items.push({shape: others[Math.floor(Math.random()*others.length)], color: colorPool[Math.floor(Math.random()*colorPool.length)]}); }
+  return shuffle(items).map(it=>({...it, found:false}));
+}
+function initCacaFormas(){ cacaFormasSubIndex = 0; loadCacaFormasSub(); }
+function loadCacaFormasSub(){
+  const target = cacaFormasTargets[cacaFormasSubIndex];
+  cacaFormasItems = buildCacaFormasScatter(target);
+  const label = target==='triangle' ? 'TRIÂNGULOS' : target==='circle' ? 'CÍRCULOS' : 'QUADRADOS';
+  document.getElementById('roboHint').textContent = `🔎 Encontre todos os ${label}!`;
+  document.getElementById('roboProgress').textContent = '';
+  speak(`Encontre todos os ${label.toLowerCase()}!`);
+  renderCacaFormas();
+}
+function renderCacaFormas(){
+  document.getElementById('roboGameArea').innerHTML = `<div class="robo-scatter" id="roboScatter"></div>`;
+  document.getElementById('roboScatter').innerHTML = cacaFormasItems.map((it,i)=>
+    `<button class="robo-scatter-item shape-render ${it.shape} ${it.found?'found':''}" id="scatter-${i}" style="background:${it.color};" onclick="tapCacaFormas(${i})" ${it.found?'disabled':''}></button>`
+  ).join('');
+}
+function tapCacaFormas(i){
+  const target = cacaFormasTargets[cacaFormasSubIndex];
+  const item = cacaFormasItems[i];
+  if(item.found) return;
+  if(item.shape === target){
+    item.found = true;
+    renderCacaFormas();
+    if(cacaFormasItems.filter(it=>it.shape===target).every(it=>it.found)){
+      cacaFormasSubIndex++;
+      if(cacaFormasSubIndex >= cacaFormasTargets.length){
+        const info = roboPhaseInfo[roboPhaseIndex];
+        document.getElementById('roboProgress').textContent = info.sucesso;
+        speak(info.sucesso);
+        const nb = document.getElementById('roboNextBtn');
+        nb.textContent = 'Próxima fase →';
+        nb.onclick = nextRoboPhase;
+        nb.classList.add('show');
+      } else {
+        setTimeout(loadCacaFormasSub, 500);
+      }
+    }
+  } else {
+    const el = document.getElementById(`scatter-${i}`);
+    el.classList.add('shake-svg');
+    setTimeout(()=>el.classList.remove('shake-svg'), 300);
+  }
+}
+
+/* Fase 6: Desafio (sequência de ativação) */
+const roboSeqOrder = ['circle','triangle','square'];
+let roboSeqExpected = 0;
+function initRoboSequencia(){
+  roboSeqExpected = 0;
+  document.getElementById('roboHint').textContent = 'Toque na ordem certa: círculo, triângulo, quadrado!';
+  document.getElementById('roboProgress').textContent = '';
+  speak('Para ativar o robô, toque na ordem: círculo, triângulo, quadrado!');
+  renderRoboSequencia();
+}
+function renderRoboSequencia(){
+  const track = roboSeqOrder.map((s,i)=>`<div class="seq-mark ${i<roboSeqExpected?'filled':''}">${i<roboSeqExpected?'✓':''}</div>`).join('');
+  const colorFor = { circle:'#4A90C4', triangle:'#F5C542', square:'#E15A4C' };
+  const options = shuffle(['circle','triangle','square']).map(s=>{
+    const d = shapeDims(s);
+    return `<button class="robo-seq-btn shape-render ${s}" style="width:${d.w}px;height:${d.h}px;background:${colorFor[s]};" onclick="tapRoboSeq('${s}')"></button>`;
+  }).join('');
+  document.getElementById('roboGameArea').innerHTML = `<div class="robo-seq-track">${track}</div><div class="robo-seq-options">${options}</div>`;
+}
+function tapRoboSeq(shape){
+  if(shape === roboSeqOrder[roboSeqExpected]){
+    roboSeqExpected++;
+    if(roboSeqExpected >= roboSeqOrder.length){
+      const info = roboPhaseInfo[roboPhaseIndex];
+      document.getElementById('roboProgress').textContent = info.sucesso;
+      speak(info.sucesso);
+      const nb = document.getElementById('roboNextBtn');
+      nb.textContent = 'Ativar Mega Robô ⚡';
+      nb.onclick = nextRoboPhase;
+      nb.classList.add('show');
+    } else {
+      renderRoboSequencia();
+    }
+  } else {
+    roboSeqExpected = 0;
+    document.getElementById('roboProgress').textContent = 'Quase! Vamos tentar de novo.';
+    renderRoboSequencia();
+  }
+}
+
+function loadRoboPhase(){
+  const info = roboPhaseInfo[roboPhaseIndex];
+  document.getElementById('roboTitle').textContent = `Fase ${roboPhaseIndex+1} de ${roboPhaseInfo.length} — ${info.titulo}`;
+  document.getElementById('roboProgress').textContent = '';
+  document.getElementById('roboNextBtn').classList.remove('show');
+  renderRoboPreview();
+  if(info.tipo==='assemble'){
+    document.getElementById('roboHint').textContent = info.hint;
+    speak(info.hint);
+    const tray = buildRoboTray(roboPhaseIndex);
+    document.getElementById('roboGameArea').innerHTML = `<div class="shape-tray" id="roboPieces"></div>`;
+    document.getElementById('roboPieces').innerHTML = tray.map((p,i)=>{
+      const d = shapeDims(p.shape);
+      const pid = `rpiece-${i}`;
+      return `<button class="shape-piece shape-render ${p.shape}" id="${pid}" style="width:${d.w}px;height:${d.h}px;background:${p.color};" onclick="selectRoboPiece('${pid}','${p.shape}','${p.color}')"></button>`;
+    }).join('');
+    roboSelectedPiece = null;
+  } else if(info.tipo==='cacaformas'){
+    initCacaFormas();
+  } else if(info.tipo==='sequencia'){
+    initRoboSequencia();
+  }
+}
+function nextRoboPhase(){
+  roboPhaseIndex++;
+  if(roboPhaseIndex >= roboPhaseInfo.length){ showRoboActivation(); return; }
+  loadRoboPhase();
+}
+function restartRoboPhase(){
+  getPartsForPhase(roboPhaseIndex).forEach(k=>{ delete roboFilled[k]; });
+  loadRoboPhase();
+}
+function showRoboActivation(){
+  document.getElementById('roboHint').textContent = '';
+  document.getElementById('roboProgress').textContent = '';
+  document.getElementById('roboNextBtn').classList.remove('show');
+  document.getElementById('roboTitle').textContent = '⚡ MEGA ROBÔ PRONTO!';
+  document.getElementById('roboSvgHolder').classList.add('robo-glow');
+  document.getElementById('roboGameArea').innerHTML = `
+    <div class="robo-activation">
+      <p style="font-size:1.05rem; font-weight:bold; color:#1B2A55; margin:10px 0;">🎉 MISSÃO CONCLUÍDA!</p>
+      <button class="start-btn small" onclick="completeMission('megarobo')">Concluir Missão ⭐</button>
+    </div>`;
+  speak('Mega Robô pronto! Missão concluída!');
+}
+function initRobo(){
+  roboPhaseIndex = 0;
+  roboFilled = {};
+  const holder = document.getElementById('roboSvgHolder');
+  holder.dataset.built = '';
+  holder.classList.remove('robo-glow');
+  loadRoboPhase();
+}
+
 /* ---------- Conclusão de missão (Fase 2) ---------- */
 const missionsCompleted = new Set();
 let totalStars = 0;
@@ -1397,6 +1835,7 @@ function completeMission(missionId){
   document.getElementById('completeMsg').textContent = `Você ajudou o Guardião da Missão ${m.nome}!`;
   document.getElementById('starsCount').textContent = `⭐ Estrelas conquistadas: ${totalStars}`;
   goTo('mission-complete');
+  speak(`Missão cumprida! Parabéns, você ajudou o Guardião da Missão ${m.nome}!`);
 }
 
 function bigHeroBanner(){
@@ -1765,6 +2204,7 @@ function loadWord(){
   document.getElementById('wordClue').textContent = w.clue;
   document.getElementById('progress').textContent = `Palavra ${wordIndex+1} de ${words.length}`;
   document.getElementById('nextBtn').classList.remove('show');
+  speak(w.clue);
 
   const slotsEl = document.getElementById('slots');
   slotsEl.innerHTML = currentWord.split('').map((_,i)=>`<div class="slot" id="slot-${i}"></div>`).join('');
@@ -1852,6 +2292,7 @@ function loadMemoryPhase(){
     : 'Encontre todos os pares!';
   document.getElementById('memoryNextBtn').classList.remove('show');
   document.getElementById('memoryProgress').textContent = '';
+  speak(phase.type==='colors' ? 'Encontre os pares de cores iguais!' : 'Encontre todos os pares!');
   const grid = document.getElementById('memoryGrid');
   grid.style.gridTemplateColumns = `repeat(${phase.size}, 1fr)`;
   const fontSize = phase.size === 2 ? '2.2rem' : (phase.size === 3 ? '1.7rem' : '1.3rem');
