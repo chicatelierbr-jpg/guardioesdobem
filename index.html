@@ -78,16 +78,36 @@
   .banner-scene svg{ width:100%; height:100%; display:block; }
   .banner-heroes{
     position:absolute;
-    left:0; right:0; bottom:16px;
+    left:0; right:0; bottom:14px;
+    top:0;
     z-index:1;
-    display:flex;
-    align-items:flex-end;
-    justify-content:center;
-    gap:0px;
+    overflow:hidden;
   }
-  .side-hero svg{ display:block; width:38px; height:auto; }
-  .big-hero{ position:relative; z-index:2; }
-  .big-hero svg{ width:46px; height:auto; filter: drop-shadow(0 6px 5px rgba(0,0,0,0.18)); }
+  .runner{
+    position:absolute;
+    bottom:0;
+    left:-14%;
+    animation-name: runAcross;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  }
+  .runner svg{ display:block; filter: drop-shadow(0 4px 3px rgba(0,0,0,0.18)); }
+  @keyframes runAcross{
+    0%   { left:-14%; transform: translateY(0) scaleX(1); }
+    23%  { transform: translateY(0) scaleX(1); }
+    26%  { transform: translateY(-20px) scaleX(1); }
+    30%  { transform: translateY(0) scaleX(1); }
+    48%  { transform: translateY(0) scaleX(1); }
+    51%  { transform: translateY(-20px) scaleX(1); }
+    55%  { transform: translateY(0) scaleX(1); }
+    73%  { transform: translateY(0) scaleX(1); }
+    76%  { transform: translateY(-20px) scaleX(1); }
+    80%  { transform: translateY(0) scaleX(1); }
+    100% { left:104%; transform: translateY(0) scaleX(1); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .runner{ animation: none; left:10%; }
+  }
   p.sub{
     text-align:center;
     color:#6B6459;
@@ -225,6 +245,56 @@
     display:flex; align-items:center; justify-content:center;
     font-size:0.85rem;
     box-shadow: 0 2px 0 rgba(0,0,0,0.15);
+  }
+  .extra-mission-wrap{
+    width:100%;
+    margin: 4px 0 18px;
+  }
+  .extra-mission-label{
+    font-family: 'Bangers', 'Trebuchet MS', cursive;
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
+    color: #6B6459;
+    text-align:center;
+    margin-bottom: 8px;
+  }
+  .extra-mission-card{
+    width:100%;
+    display:flex;
+    align-items:center;
+    gap: 14px;
+    background: var(--card);
+    border-radius: 20px;
+    border: 2px dashed #C9BFA8;
+    box-shadow: var(--shadow);
+    padding: 14px 16px;
+    cursor:pointer;
+  }
+  .extra-mission-card:active{ transform: translateY(3px); box-shadow:none; }
+  .extra-mission-icon{
+    width:52px; height:52px; flex-shrink:0;
+    border-radius: 14px;
+    background: var(--amarelo);
+    display:flex; align-items:center; justify-content:center;
+    font-size: 1.5rem;
+  }
+  .extra-mission-title{ font-weight:bold; font-size:1rem; color:var(--ink); }
+  .extra-mission-sub{ font-size:0.8rem; color:#6B6459; }
+
+  .extra-tabs{ display:flex; gap:10px; justify-content:center; margin-bottom:12px; }
+  .extra-tab{
+    border:2px solid var(--line);
+    background: var(--card);
+    border-radius: 999px;
+    padding: 10px 18px;
+    font-size: 0.95rem;
+    font-weight:bold;
+    color: var(--ink);
+    cursor:pointer;
+  }
+  .extra-tab.active{
+    background: var(--amarelo);
+    border-color: #C99A2E;
   }
   .home-link{ margin: 4px auto 0; display:block; }
   .love-link{ margin: 8px auto 0; display:block; color:#B5548A; }
@@ -538,6 +608,15 @@
   }
   .voice-toggle:active{ transform: translateY(2px); box-shadow:none; }
 
+  .mission-mascot{
+    position:fixed;
+    bottom:14px; left:14px;
+    z-index:55;
+    cursor:pointer;
+    display:none;
+  }
+  .mission-mascot svg{ display:block; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.2)); }
+
   .topbar{
     width:100%; max-width:520px;
     display:flex; align-items:center; justify-content:space-between;
@@ -606,6 +685,40 @@
     font-size: 0.85rem;
     color:#6B6459;
     margin-top: 12px;
+  }
+
+  /* Ouvir/quiz de cores */
+  .color-learn-grid{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin: 14px 0 4px;
+  }
+  .color-learn-swatch{
+    width:100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 20px;
+    border: 4px solid white;
+    box-shadow: var(--shadow), 0 0 0 2px var(--line);
+    cursor:pointer;
+    transition: transform 0.15s;
+  }
+  .color-learn-swatch:active{ transform: scale(0.94); }
+  .color-learn-swatch.correct{
+    box-shadow: var(--shadow), 0 0 0 4px var(--verde);
+    animation: colorPop 0.4s ease-out;
+  }
+  .color-learn-swatch.wrong{
+    animation: colorShake 0.4s ease-in-out;
+    box-shadow: var(--shadow), 0 0 0 4px var(--vermelho);
+  }
+  @keyframes colorPop{
+    0%{ transform: scale(1); } 50%{ transform: scale(1.15); } 100%{ transform: scale(1); }
+  }
+  @keyframes colorShake{
+    0%,100%{ transform: translateX(0); }
+    25%{ transform: translateX(-8px); }
+    75%{ transform: translateX(8px); }
   }
 
   /* Word game */
@@ -814,6 +927,16 @@
   <section class="screen" id="screen-missions">
     <h1 class="missions-title">⭐ Escolha uma Missão!</h1>
     <div class="mission-grid" id="missionGrid"></div>
+    <div class="extra-mission-wrap">
+      <div class="extra-mission-label">✨ Missão Extra</div>
+      <button class="extra-mission-card" onclick="openExtraMission()">
+        <div class="extra-mission-icon">🔤</div>
+        <div>
+          <div class="extra-mission-title">Letras e Números</div>
+          <div class="extra-mission-sub">Aprenda o alfabeto e a contar!</div>
+        </div>
+      </button>
+    </div>
     <button class="back-btn home-link" onclick="goTo('home')">🏠 Início</button>
     <button class="back-btn love-link" onclick="goTo('final')">💌 Mensagem dos Guardiões</button>
   </section>
@@ -848,9 +971,26 @@
   <section class="screen" id="screen-color">
     <div class="topbar">
       <button class="back-btn" onclick="goTo('missions')">← Voltar</button>
-      <button class="back-btn" onclick="resetColoring()">Limpar</button>
+      <button class="back-btn" id="colorResetBtn" onclick="resetColoring()" style="display:none;">Limpar</button>
     </div>
-    <div class="color-wrap">
+
+    <!-- FASE 1: ouvir o nome das cores -->
+    <div class="word-wrap" id="colorListenView">
+      <h2>Ouça as cores!</h2>
+      <p class="hint">Toque numa cor para ouvir o nome dela.</p>
+      <div class="color-learn-grid" id="colorLearnGrid"></div>
+      <button class="next-btn show" onclick="startColorQuiz()">Continuar →</button>
+    </div>
+
+    <!-- FASE 2: quiz - toque na cor certa -->
+    <div class="word-wrap" id="colorQuizView" style="display:none;">
+      <h2 id="colorQuizPrompt">Toque na cor:</h2>
+      <div class="color-learn-grid" id="colorQuizGrid"></div>
+      <div class="progress" id="colorQuizProgress"></div>
+    </div>
+
+    <!-- FASE 3: pintar os heróis -->
+    <div class="color-wrap" id="colorPaintView" style="display:none;">
       <div class="hero-nav">
         <button class="nav-arrow" id="prevHero" onclick="prevHero()">←</button>
         <div id="heroSvgHolder"></div>
@@ -867,7 +1007,7 @@
   <section class="screen" id="screen-word">
     <div class="topbar">
       <button class="back-btn" onclick="goTo('missions')">← Voltar</button>
-      <button class="back-btn" id="alphaToggleBtn" onclick="toggleAlphabetView()">🔤 Alfabeto</button>
+      <div></div>
     </div>
     <div class="word-wrap" id="wordGameView">
       <div class="word-emoji" id="wordEmoji">🦸</div>
@@ -876,16 +1016,6 @@
       <div class="letters" id="letters"></div>
       <div class="progress" id="progress"></div>
       <button class="next-btn" id="nextBtn" onclick="nextWord()">Próxima palavra →</button>
-    </div>
-    <div class="word-wrap" id="alphabetView" style="display:none;">
-      <h2>Alfabeto</h2>
-      <p class="hint">Toque numa letra para ouvir o som, depois cubra ela com o dedo!</p>
-      <div class="alpha-grid" id="alphaGrid"></div>
-      <div class="trace-wrap">
-        <div class="trace-letter" id="traceLetterBg">A</div>
-        <canvas id="traceCanvas" width="220" height="260"></canvas>
-      </div>
-      <button class="back-btn" onclick="clearTrace()">Limpar traçado</button>
     </div>
   </section>
 
@@ -938,7 +1068,7 @@
   <section class="screen" id="screen-contagem">
     <div class="topbar">
       <button class="back-btn" onclick="goTo('missions')">← Voltar</button>
-      <button class="back-btn" id="numeroToggleBtn" onclick="toggleNumeroView()">🔢 Números</button>
+      <div></div>
     </div>
     <div class="word-wrap" id="contagemGameView">
       <h2 id="contagemPergunta">Quantos existem?</h2>
@@ -947,15 +1077,39 @@
       <div class="progress" id="contagemProgress"></div>
       <button class="next-btn" id="contagemNextBtn" onclick="nextContagemRound()">Próxima →</button>
     </div>
-    <div class="word-wrap" id="numeroView" style="display:none;">
-      <h2>Números</h2>
-      <p class="hint">Toque num número para ouvir o nome dele, depois cubra ele com o dedo!</p>
-      <div class="alpha-grid numero-grid" id="numeroGrid"></div>
-      <div class="trace-wrap">
-        <div class="trace-letter" id="traceNumeroBg">0</div>
-        <canvas id="traceNumeroCanvas" width="220" height="260"></canvas>
+  </section>
+
+  <!-- MISSÃO EXTRA: LETRAS E NÚMEROS -->
+  <section class="screen" id="screen-extra">
+    <div class="topbar">
+      <button class="back-btn" onclick="goTo('missions')">← Voltar</button>
+      <div></div>
+    </div>
+    <div class="word-wrap">
+      <div class="extra-tabs">
+        <button class="extra-tab active" id="tabAlfabeto" onclick="showExtraTab('alfabeto')">🔤 Alfabeto</button>
+        <button class="extra-tab" id="tabNumeros" onclick="showExtraTab('numeros')">🔢 Números</button>
       </div>
-      <button class="back-btn" onclick="clearNumeroTrace()">Limpar traçado</button>
+      <div id="extraAlfabetoView">
+        <h2>Alfabeto</h2>
+        <p class="hint">Toque numa letra para ouvir o som, depois cubra ela com o dedo!</p>
+        <div class="alpha-grid" id="alphaGrid"></div>
+        <div class="trace-wrap">
+          <div class="trace-letter" id="traceLetterBg">A</div>
+          <canvas id="traceCanvas" width="220" height="260"></canvas>
+        </div>
+        <button class="back-btn" onclick="clearTrace()">Limpar traçado</button>
+      </div>
+      <div id="extraNumerosView" style="display:none;">
+        <h2>Números</h2>
+        <p class="hint">Toque num número para ouvir o nome dele, depois cubra ele com o dedo!</p>
+        <div class="alpha-grid numero-grid" id="numeroGrid"></div>
+        <div class="trace-wrap">
+          <div class="trace-letter" id="traceNumeroBg">0</div>
+          <canvas id="traceNumeroCanvas" width="220" height="260"></canvas>
+        </div>
+        <button class="back-btn" onclick="clearNumeroTrace()">Limpar traçado</button>
+      </div>
     </div>
   </section>
 
@@ -1122,8 +1276,39 @@ function goTo(name){
   if(name==='precisao' && !window._precisaoInit){ initPrecisao(); window._precisaoInit=true; }
   if(name==='coragem' && !window._coragemInit){ initCoragem(); window._coragemInit=true; }
   if(name==='megarobo' && !window._roboInit){ initRobo(); window._roboInit=true; }
+  if(name==='extra' && !window._extraInit){ initAlphabet(); initNumeros(); window._extraInit=true; }
+  updateMissionMascot(name);
   window.scrollTo(0,0);
 }
+
+/* ---------- Mascote (bonequinho) presente nas missões ---------- */
+function initMissionMascot(){
+  if(document.getElementById('missionMascot')) return;
+  const el = document.createElement('div');
+  el.id = 'missionMascot';
+  el.className = 'mission-mascot jumper';
+  el.setAttribute('aria-label', 'Mascote da missão');
+  el.onclick = ()=>{
+    const frases = ['Você consegue! 💪','Vai, herói! ⭐','Continue assim!','Estou torcendo por você!','Isso aí, campeão!'];
+    speak(frases[Math.floor(Math.random()*frases.length)]);
+  };
+  document.body.appendChild(el);
+}
+function updateMissionMascot(screenName){
+  const el = document.getElementById('missionMascot');
+  if(!el) return;
+  const semMascote = ['home','missions','mission-intro','mission-complete','final'];
+  if(semMascote.includes(screenName)){
+    el.style.display = 'none';
+    return;
+  }
+  let cor = '#F5C542';
+  const m = missions.find(x=>x.screen===screenName);
+  if(m) cor = m.cor;
+  el.innerHTML = miniHeroSvg(cor, 46);
+  el.style.display = '';
+}
+initMissionMascot();
 
 /* ---------- Cores da equipe ---------- */
 const teamColors = [
@@ -1176,7 +1361,7 @@ const missions = [
     mensagem:'O que vem depois? Descubra o padrão!' },
   { id:'precisao',  nome:'Precisão',     cor:'#45BFB8', acessorio:'🎯', screen:'precisao', existente:true,
     mensagem:'Vamos estourar os balões com cuidado!' },
-  { id:'coragem',   nome:'Coragem',      cor:'#A65D33', acessorio:'🧯', screen:'coragem',  existente:true,
+  { id:'coragem',   nome:'Coragem',      cor:'#9B9B94', acessorio:'🧯', screen:'coragem',  existente:true,
     mensagem:'Os bichos da floresta precisam da sua coragem! Leve-os para um lugar seguro!' },
   { id:'megarobo',  nome:'Mega Robô',    cor:'#4A4540', acessorio:'🤖', screen:'megarobo', existente:true,
     mensagem:'🚨 O Mega Robô precisa da sua ajuda! Vamos encontrar e encaixar as peças dele?' }
@@ -1206,6 +1391,32 @@ function openMission(i){
   document.getElementById('missionIntroMsg').textContent = m.mensagem;
   document.getElementById('missionIntroBtn').onclick = ()=> goTo(m.screen);
   goTo('mission-intro');
+}
+
+function openExtraMission(){
+  document.getElementById('missionIntroAvatar').innerHTML = '<div style="font-size:64px; line-height:1;">🔤🔢</div>';
+  document.getElementById('missionIntroTitle').textContent = 'MISSÃO EXTRA';
+  document.getElementById('missionIntroMsg').textContent = 'Vamos aprender as letras e os números?';
+  document.getElementById('missionIntroBtn').onclick = ()=> goTo('extra');
+  goTo('mission-intro');
+}
+
+function showExtraTab(tab){
+  const alfaView = document.getElementById('extraAlfabetoView');
+  const numView = document.getElementById('extraNumerosView');
+  const tabAlfa = document.getElementById('tabAlfabeto');
+  const tabNum = document.getElementById('tabNumeros');
+  if(tab === 'alfabeto'){
+    alfaView.style.display = '';
+    numView.style.display = 'none';
+    tabAlfa.classList.add('active');
+    tabNum.classList.remove('active');
+  } else {
+    alfaView.style.display = 'none';
+    numView.style.display = '';
+    tabAlfa.classList.remove('active');
+    tabNum.classList.add('active');
+  }
 }
 
 let toastTimer = null;
@@ -1979,16 +2190,21 @@ function renderMenuBanner(){
       <path d="M250 187 l-4 -11"/><path d="M258 188 l1 -12"/><path d="M266 187 l4 -10"/>
       <path d="M340 182 l-4 -11"/><path d="M348 183 l1 -12"/><path d="M356 182 l4 -10"/>
     </g>
+    <!-- obstáculos que os heróis pulam -->
+    <g stroke="#3F7A34" stroke-width="2">
+      <path d="M96 176 Q100 156 104 176 Z" fill="#6FAE5A"/>
+      <path d="M196 178 Q201 154 206 178 Z" fill="#6FAE5A"/>
+      <path d="M296 176 Q300 156 304 176 Z" fill="#6FAE5A"/>
+    </g>
   </svg>`;
+  const runnersHtml = missions.map((m,i)=>{
+    const dur = (13 + (i%4)*2.2).toFixed(1);
+    const delay = (-i * 1.6).toFixed(1);
+    return `<div class="runner" style="animation-duration:${dur}s; animation-delay:${delay}s;">${miniHeroSvg(m.cor, 40)}</div>`;
+  }).join('');
   el.innerHTML = `
     <div class="banner-scene">${scene}</div>
-    <div class="banner-heroes">
-      <div class="side-hero jumper" style="animation-delay:0s;">${miniHeroSvg(teamColors[2].hex, 52)}</div>
-      <div class="side-hero jumper" style="animation-delay:0.5s;">${miniHeroSvg(teamColors[1].hex, 52)}</div>
-      <div class="big-hero jumper" style="animation-delay:1s;">${bigHeroBanner()}</div>
-      <div class="side-hero jumper" style="animation-delay:1.5s;">${miniHeroSvg(teamColors[3].hex, 52)}</div>
-      <div class="side-hero jumper" style="animation-delay:2s;">${miniHeroSvg(teamColors[4].hex, 52)}</div>
-    </div>
+    <div class="banner-heroes">${runnersHtml}</div>
   `;
 }
 renderMenuBanner();
@@ -2210,10 +2426,75 @@ function renderFreeDraw(){
   document.getElementById('heroCounter').textContent = `Desenho Livre — ${totalPages} de ${totalPages}`;
 }
 
+function getColorLearnList(){
+  return teamColors.concat([{name:'amarelo',hex:'#F5C542'},{name:'branco',hex:'#FFFFFF'}]);
+}
+
 function initColoring(){
+  renderColorListen();
+}
+
+function renderColorListen(){
+  const grid = document.getElementById('colorLearnGrid');
+  grid.innerHTML = getColorLearnList().map(c=>
+    `<button class="color-learn-swatch" style="background:${c.hex}" aria-label="${c.name}" onclick="speak('${c.name}')"></button>`
+  ).join('');
+}
+
+let colorQuizRounds = [];
+let colorQuizIndex = 0;
+let colorQuizTarget = '';
+
+function startColorQuiz(){
+  document.getElementById('colorListenView').style.display = 'none';
+  document.getElementById('colorQuizView').style.display = '';
+  colorQuizRounds = shuffle(getColorLearnList());
+  colorQuizIndex = 0;
+  loadColorQuizRound();
+}
+
+function loadColorQuizRound(){
+  if(colorQuizIndex >= colorQuizRounds.length){
+    finishColorQuiz();
+    return;
+  }
+  const target = colorQuizRounds[colorQuizIndex];
+  colorQuizTarget = target.name;
+  const nomeCapitalizado = target.name.charAt(0).toUpperCase() + target.name.slice(1);
+  document.getElementById('colorQuizPrompt').textContent = `Toque na cor: ${nomeCapitalizado}`;
+  document.getElementById('colorQuizProgress').textContent = `${colorQuizIndex+1} de ${colorQuizRounds.length}`;
+  const grid = document.getElementById('colorQuizGrid');
+  grid.innerHTML = shuffle(getColorLearnList()).map(c=>
+    `<button class="color-learn-swatch" style="background:${c.hex}" aria-label="${c.name}" onclick="tapColorQuiz('${c.name}', this)"></button>`
+  ).join('');
+  speak(`Toque na cor ${target.name}`);
+}
+
+function tapColorQuiz(name, el){
+  if(el.classList.contains('correct')) return;
+  if(name === colorQuizTarget){
+    document.querySelectorAll('#colorQuizGrid .color-learn-swatch').forEach(b=> b.disabled = true);
+    el.classList.add('correct');
+    speak('Isso mesmo!');
+    setTimeout(()=>{
+      colorQuizIndex++;
+      loadColorQuizRound();
+    }, 700);
+  } else {
+    el.classList.add('wrong');
+    speak('Tente de novo');
+    setTimeout(()=> el.classList.remove('wrong'), 450);
+  }
+}
+
+function finishColorQuiz(){
+  speak('Muito bem! Agora vamos pintar os heróis!');
+  document.getElementById('colorQuizView').style.display = 'none';
+  document.getElementById('colorPaintView').style.display = '';
+  document.getElementById('colorResetBtn').style.display = '';
   renderHero();
   const pal = document.getElementById('palette');
-  pal.innerHTML = teamColors.concat([{name:'amarelo',hex:'#F5C542'},{name:'branco',hex:'#FFFFFF'}]).map((c,i)=>{
+  pal.innerHTML = getColorLearnList().map((c,i)=>{
     return `<div class="swatch ${i===0?'selected':''}" data-hex="${c.hex}" style="background:${c.hex}"></div>`;
   }).join('');
   pal.querySelectorAll('.swatch').forEach(sw=>{
@@ -2224,6 +2505,7 @@ function initColoring(){
     });
   });
 }
+
 function prevHero(){
   currentHeroIndex = (currentHeroIndex - 1 + totalPages) % totalPages;
   renderHero();
@@ -2388,22 +2670,7 @@ function initTraceCanvas(){
 function clearTrace(){
   if(traceCtx) traceCtx.clearRect(0, 0, 220, 260);
 }
-function toggleAlphabetView(){
-  const wordView = document.getElementById('wordGameView');
-  const alphaView = document.getElementById('alphabetView');
-  const btn = document.getElementById('alphaToggleBtn');
-  const showingAlpha = alphaView.style.display !== 'none';
-  if(showingAlpha){
-    alphaView.style.display = 'none';
-    wordView.style.display = '';
-    btn.textContent = '🔤 Alfabeto';
-  } else {
-    wordView.style.display = 'none';
-    alphaView.style.display = '';
-    btn.textContent = '🔡 Formar Palavras';
-    if(!window._alphaInit){ initAlphabet(); window._alphaInit = true; }
-  }
-}
+
 
 /* ---------- Números (pronúncia + traçado) ---------- */
 const numberDigits = ['0','1','2','3','4','5','6','7','8','9'];
@@ -2466,22 +2733,7 @@ function initTraceNumeroCanvas(){
 function clearNumeroTrace(){
   if(traceNumeroCtx) traceNumeroCtx.clearRect(0, 0, 220, 260);
 }
-function toggleNumeroView(){
-  const gameView = document.getElementById('contagemGameView');
-  const numView = document.getElementById('numeroView');
-  const btn = document.getElementById('numeroToggleBtn');
-  const showingNumero = numView.style.display !== 'none';
-  if(showingNumero){
-    numView.style.display = 'none';
-    gameView.style.display = '';
-    btn.textContent = '🔢 Números';
-  } else {
-    gameView.style.display = 'none';
-    numView.style.display = '';
-    btn.textContent = '🔟 Contagem';
-    if(!window._numeroInit){ initNumeros(); window._numeroInit = true; }
-  }
-}
+
 
 /* ---------- Jogo da Memória (3 fases) ---------- */
 const memoryPhases = [
