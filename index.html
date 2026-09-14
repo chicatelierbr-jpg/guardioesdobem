@@ -889,6 +889,23 @@
     width:220px; height:260px;
     touch-action:none;
   }
+  .finger-hero{
+    position:absolute;
+    top:0; left:0;
+    width:30px;
+    transform: translate(-50%,-85%);
+    pointer-events:none;
+    z-index:10;
+    opacity:0;
+    transition: opacity .15s;
+  }
+  .finger-hero.show{ opacity:1; }
+  .finger-hero svg{ display:block; width:100%; height:auto; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3)); }
+  .finger-hero.jump{ animation: fingerHeroJump 0.7s ease-in-out 2; }
+  @keyframes fingerHeroJump{
+    0%, 100%{ transform: translate(-50%,-85%) scale(1); }
+    40%{ transform: translate(-50%,-140%) scale(1.15); }
+  }
 
   .memory-wrap{
     width:100%;
@@ -2957,53 +2974,65 @@ function onLetterTraceDone(){
    Cada traço é desenhado separadamente, pontilhado, com uma setinha
    discreta no final indicando a direção que o dedo deve seguir. */
 const letterStrokePaths = {
-  A: ["M20,128 L50,12", "M50,12 L80,128", "M30,88 L70,88"],
+  A: ["M50,12 L20,128", "M50,12 L80,128", "M30,88 L70,88"],
   B: ["M20,12 L20,128", "M20,12 Q78,12 78,40 Q78,68 20,68", "M20,68 Q82,68 82,98 Q82,128 20,128"],
   C: ["M78,32 A44,44 0 1 0 78,108"],
   D: ["M20,12 L20,128", "M20,12 Q84,12 84,70 Q84,128 20,128"],
   E: ["M20,12 L80,12", "M20,12 L20,128", "M20,128 L80,128", "M20,70 L65,70"],
   F: ["M20,12 L80,12", "M20,12 L20,128", "M20,70 L65,70"],
-  G: ["M78,32 A44,44 0 1 0 78,108", "M78,108 L52,108"],
+  G: ["M68,18 A40,56 0 1 0 80,76 L98,76"],
   H: ["M20,12 L20,128", "M80,12 L80,128", "M20,70 L80,70"],
   I: ["M50,12 L50,128"],
-  J: ["M70,12 L70,98", "M70,98 Q70,128 42,128 Q20,128 20,104"],
-  K: ["M20,12 L20,128", "M20,70 L80,12", "M20,70 L80,128"],
+  J: ["M70,12 L70,95", "M20,104 Q20,128 42,128 Q70,128 70,98"],
+  K: ["M20,12 L20,128", "M80,12 L20,70", "M20,70 L80,128"],
   L: ["M20,12 L20,128", "M20,128 L80,128"],
-  M: ["M14,12 L14,128", "M14,12 L50,78", "M50,78 L86,12", "M86,12 L86,128"],
+  M: ["M14,12 L14,128", "M14,12 L50,78", "M86,12 L50,78", "M86,12 L86,128"],
   N: ["M20,12 L20,128", "M20,12 L80,128", "M80,12 L80,128"],
-  O: ["M50,12 A38,58 0 1 0 50,128", "M50,12 A38,58 0 1 1 50,128"],
+  O: [["M50,12 A38,58 0 1 0 50,128", "M50,12 A38,58 0 1 1 50,128"]],
   P: ["M20,12 L20,128", "M20,12 Q82,12 82,42 Q82,70 20,70"],
-  Q: ["M50,12 A38,58 0 1 0 50,128", "M50,12 A38,58 0 1 1 50,128", "M56,98 L84,128"],
+  Q: [["M50,12 A38,58 0 1 0 50,128", "M50,12 A38,58 0 1 1 50,128"], "M56,98 L84,128"],
   R: ["M20,12 L20,128", "M20,12 Q82,12 82,42 Q82,70 20,70", "M44,70 L82,128"],
-  S: ["M62,16 Q30,8 24,32 Q18,54 48,64 Q80,74 80,100 Q80,128 46,128"],
+  S: ["M62,16 Q30,8 24,32 Q18,54 48,64", "M48,64 Q80,74 80,100 Q80,128 46,128"],
   T: ["M16,12 L84,12", "M50,12 L50,128"],
   U: ["M20,12 L20,98", "M20,98 Q20,128 50,128 Q80,128 80,98", "M80,98 L80,12"],
   V: ["M16,12 L50,128", "M50,128 L84,12"],
-  W: ["M10,12 L28,128", "M28,128 L50,64", "M50,64 L72,128", "M72,128 L90,12"],
+  W: ["M10,12 L28,128", "M50,64 L28,128", "M50,64 L72,128", "M90,12 L72,128"],
   X: ["M16,12 L84,128", "M84,12 L16,128"],
   Y: ["M16,12 L50,72", "M84,12 L50,72", "M50,72 L50,128"],
   Z: ["M16,12 L84,12", "M84,12 L16,128", "M16,128 L84,128"]
 };
 const numeroStrokePaths = {
-  '0': ["M50,12 A36,58 0 1 0 50,128", "M50,12 A36,58 0 1 1 50,128"],
-  '1': ["M50,12 L50,128"],
+  '0': [["M50,12 A36,58 0 1 0 50,128", "M50,12 A36,58 0 1 1 50,128"]],
+  '1': ["M50,12 L36,26", "M50,12 L50,128"],
   '2': ["M38,14 Q70,10 76,32 Q80,52 56,66 L20,122", "M20,128 L78,128"],
-  '3': ["M26,14 Q60,8 72,28 Q82,48 56,60", "M56,60 Q88,66 88,98 Q88,128 50,128"],
-  '4': ["M62,12 L18,92", "M18,92 L86,92", "M62,12 L62,128"],
+  '3': ["M26,14 Q60,8 72,28 Q82,48 56,60", "M30,64 Q20,78 22,96 Q24,118 48,126 Q74,120 80,98"],
+  '4': ["M62,12 L18,92 L86,92", "M62,12 L62,128"],
   '5': ["M22,12 L76,12", "M22,12 L20,60", "M20,60 Q80,54 80,94 Q80,128 46,128"],
-  '6': ["M68,18 Q35,10 25,45", "M25,45 L25,95", "M25,95 A28,28 0 1 0 53,123", "M53,123 A28,28 0 1 0 25,95"],
+  '6': ["M66,20 Q35,10 37,42 L37,79", ["M37,79 A27,27 0 1 0 37,133", "M37,79 A27,27 0 1 1 37,133"]],
   '7': ["M18,12 L82,12", "M82,12 L38,128"],
-  '8': ["M50,12 A20,22 0 1 0 50,58", "M50,12 A20,22 0 1 1 50,58", "M50,58 A24,32 0 1 0 50,124", "M50,58 A24,32 0 1 1 50,124"],
-  '9': ["M58,32 A28,28 0 1 0 30,60", "M30,60 A28,28 0 1 0 58,32", "M58,32 L58,95", "M58,95 Q58,128 25,125"]
+  '8': [["M50,12 A20,22 0 1 0 50,58", "M50,12 A20,22 0 1 1 50,58"], ["M50,58 A24,32 0 1 0 50,124", "M50,58 A24,32 0 1 1 50,124"]],
+  '9': [["M44,20 A26,26 0 1 0 44,72", "M44,20 A26,26 0 1 1 44,72"], ["M44,72 L44,98", "M44,98 Q44,128 16,124"]]
 };
-/* Guia pontilhado estilo caderno de caligrafia, com setinhas de direção */
+/* Guia pontilhado estilo caderno de caligrafia, com setinhas de direção.
+   Cada "movimento" pode ser uma string (um traço) ou um array de strings
+   (o mesmo movimento pedagógico, desenhado em mais de um comando SVG por
+   questões técnicas de renderização) — nesse caso só o primeiro pedaço
+   ganha a bolinha de início e só o último ganha a seta, pra não duplicar. */
 function traceGuideSvg(char){
-  const strokes = letterStrokePaths[char] || numeroStrokePaths[char] || [];
-  const strokesHtml = strokes.map(d => {
-    const m = d.match(/^M\s*([\d.\-]+)[,\s]+([\d.\-]+)/);
-    const dot = m ? `<circle cx="${m[1]}" cy="${m[2]}" r="4.2" fill="#8B8272"/>` : '';
-    return `<path d="${d}" fill="none" stroke="#ADA392" stroke-width="4" stroke-linecap="round" stroke-dasharray="1 11" vector-effect="non-scaling-stroke" marker-end="url(#traceArrow)"/>${dot}`;
-  }).join('');
+  const movements = letterStrokePaths[char] || numeroStrokePaths[char] || [];
+  let strokesHtml = '';
+  movements.forEach(mv => {
+    const parts = Array.isArray(mv) ? mv : [mv];
+    parts.forEach((d, idx) => {
+      let dot = '';
+      if(idx === 0){
+        const m = d.match(/^M\s*([\d.\-]+)[,\s]+([\d.\-]+)/);
+        if(m) dot = `<circle cx="${m[1]}" cy="${m[2]}" r="4.2" fill="#8B8272"/>`;
+      }
+      const arrow = (idx === parts.length - 1) ? 'marker-end="url(#traceArrow)"' : '';
+      strokesHtml += `<path d="${d}" fill="none" stroke="#ADA392" stroke-width="4" stroke-linecap="round" stroke-dasharray="1 11" vector-effect="non-scaling-stroke" ${arrow}/>${dot}`;
+    });
+  });
   return `<svg viewBox="0 0 100 140" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <marker id="traceArrow" markerWidth="6.5" markerHeight="6.5" refX="4.3" refY="3.25" orient="auto" markerUnits="userSpaceOnUse">
@@ -3017,11 +3046,39 @@ function renderTraceLetter(){
   const el = document.getElementById('traceLetterBg');
   if(el) el.innerHTML = traceGuideSvg(selectedLetter);
 }
+/* Bonequinho que acompanha o dedo enquanto a criança cobre os pontinhos */
+function ensureFingerHero(wrapEl){
+  let hero = wrapEl.querySelector('.finger-hero');
+  if(!hero){
+    hero = document.createElement('div');
+    hero.className = 'finger-hero';
+    hero.innerHTML = miniHeroSvg('#F5C542', 30);
+    wrapEl.appendChild(hero);
+  }
+  return hero;
+}
+function moveFingerHero(hero, wrapEl, clientX, clientY){
+  const rect = wrapEl.getBoundingClientRect();
+  hero.style.left = (clientX - rect.left) + 'px';
+  hero.style.top = (clientY - rect.top) + 'px';
+  hero.classList.add('show');
+}
+function jumpFingerHero(hero){
+  if(!hero) return;
+  hero.classList.add('show');
+  hero.classList.remove('jump');
+  void hero.offsetWidth;
+  hero.classList.add('jump');
+  setTimeout(()=>{ hero.classList.remove('show', 'jump'); }, 1500);
+}
+
 function initTraceCanvas(){
   const canvas = document.getElementById('traceCanvas');
   if(!canvas || canvas.dataset.bound) return;
   canvas.dataset.bound = '1';
   traceCtx = canvas.getContext('2d');
+  const wrapEl = canvas.parentElement;
+  const hero = ensureFingerHero(wrapEl);
   let drawing = false;
   function pos(e){
     const rect = canvas.getBoundingClientRect();
@@ -3029,7 +3086,20 @@ function initTraceCanvas(){
     const cy = e.touches ? e.touches[0].clientY : e.clientY;
     return { x:(cx-rect.left)*(canvas.width/rect.width), y:(cy-rect.top)*(canvas.height/rect.height) };
   }
-  function start(e){ drawing = true; const p = pos(e); traceCtx.beginPath(); traceCtx.moveTo(p.x, p.y); }
+  function clientPos(e){
+    return {
+      x: e.touches ? e.touches[0].clientX : e.clientX,
+      y: e.touches ? e.touches[0].clientY : e.clientY
+    };
+  }
+  function start(e){
+    drawing = true;
+    const p = pos(e);
+    traceCtx.beginPath();
+    traceCtx.moveTo(p.x, p.y);
+    const c = clientPos(e);
+    moveFingerHero(hero, wrapEl, c.x, c.y);
+  }
   function move(e){
     if(!drawing) return;
     const p = pos(e);
@@ -3038,9 +3108,14 @@ function initTraceCanvas(){
     traceCtx.strokeStyle = '#E15A4C';
     traceCtx.lineTo(p.x, p.y);
     traceCtx.stroke();
+    const c = clientPos(e);
+    moveFingerHero(hero, wrapEl, c.x, c.y);
   }
   function end(){
-    if(drawing) onLetterTraceDone();
+    if(drawing){
+      onLetterTraceDone();
+      jumpFingerHero(hero);
+    }
     drawing = false;
   }
   canvas.addEventListener('pointerdown', start);
@@ -3064,6 +3139,13 @@ let selectedNumero = '0';
 let traceNumeroCtx = null;
 let numerosTraced = new Set();
 let numerosCelebrated = false;
+let numeroFeedbackGiven = false;
+function onNumeroTraceDone(){
+  if(numeroFeedbackGiven) return;
+  numeroFeedbackGiven = true;
+  showToast(`🔢 Esse é o número ${selectedNumero}!`);
+  speak(`Muito bem! Você escreveu o número ${numberSounds[selectedNumero]}!`);
+}
 
 function initNumeros(){
   const grid = document.getElementById('numeroGrid');
@@ -3076,6 +3158,7 @@ function initNumeros(){
 }
 function pickNumero(n){
   selectedNumero = n;
+  numeroFeedbackGiven = false;
   document.querySelectorAll('#numeroGrid .alpha-btn').forEach(b=>b.classList.remove('selected'));
   const btn = document.getElementById(`numero-${n}`);
   if(btn) btn.classList.add('selected');
@@ -3097,6 +3180,8 @@ function initTraceNumeroCanvas(){
   if(!canvas || canvas.dataset.bound) return;
   canvas.dataset.bound = '1';
   traceNumeroCtx = canvas.getContext('2d');
+  const wrapEl = canvas.parentElement;
+  const hero = ensureFingerHero(wrapEl);
   let drawing = false;
   function pos(e){
     const rect = canvas.getBoundingClientRect();
@@ -3104,7 +3189,20 @@ function initTraceNumeroCanvas(){
     const cy = e.touches ? e.touches[0].clientY : e.clientY;
     return { x:(cx-rect.left)*(canvas.width/rect.width), y:(cy-rect.top)*(canvas.height/rect.height) };
   }
-  function start(e){ drawing = true; const p = pos(e); traceNumeroCtx.beginPath(); traceNumeroCtx.moveTo(p.x, p.y); }
+  function clientPos(e){
+    return {
+      x: e.touches ? e.touches[0].clientX : e.clientX,
+      y: e.touches ? e.touches[0].clientY : e.clientY
+    };
+  }
+  function start(e){
+    drawing = true;
+    const p = pos(e);
+    traceNumeroCtx.beginPath();
+    traceNumeroCtx.moveTo(p.x, p.y);
+    const c = clientPos(e);
+    moveFingerHero(hero, wrapEl, c.x, c.y);
+  }
   function move(e){
     if(!drawing) return;
     const p = pos(e);
@@ -3113,8 +3211,16 @@ function initTraceNumeroCanvas(){
     traceNumeroCtx.strokeStyle = '#4A90C4';
     traceNumeroCtx.lineTo(p.x, p.y);
     traceNumeroCtx.stroke();
+    const c = clientPos(e);
+    moveFingerHero(hero, wrapEl, c.x, c.y);
   }
-  function end(){ drawing = false; }
+  function end(){
+    if(drawing){
+      onNumeroTraceDone();
+      jumpFingerHero(hero);
+    }
+    drawing = false;
+  }
   canvas.addEventListener('pointerdown', start);
   canvas.addEventListener('pointermove', move);
   canvas.addEventListener('pointerup', end);
@@ -3122,6 +3228,7 @@ function initTraceNumeroCanvas(){
 }
 function clearNumeroTrace(){
   if(traceNumeroCtx) traceNumeroCtx.clearRect(0, 0, 220, 260);
+  numeroFeedbackGiven = false;
 }
 
 
